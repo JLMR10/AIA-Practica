@@ -116,7 +116,7 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
     for x in range(cantidadCambio):
         Y2[randomizado[x]] = abs(1-Y2[randomizado[x]])
     
-    return X,Y,Y2
+    return X,Y2
 
 
 
