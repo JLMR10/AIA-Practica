@@ -145,6 +145,19 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 #     def clasifica_prob(self,ej):
 
 
+            randomizado = list(range(len(entr)))
+            random.shuffle(randomizado)
+
+            #for x,y in zip(entr,clas_entr):
+            for j in randomizado:
+                umbral = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
+                o = 0
+                if umbral >= 0:
+                    o = 1
+                for i in range(len(entr[0])):
+                   ## self.pesos[i] = self.pesos[i] + rate*x[i]*(y-o)
+                   self.pesos[i] = self.pesos[i] + rate*entr[j][i]*(clas_entr[j]-o)
+        return self.pesos,pesos_iniciales   
 #         ......
 
 #     def clasifica(self,ej):
