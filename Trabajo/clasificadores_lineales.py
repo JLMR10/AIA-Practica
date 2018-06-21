@@ -112,11 +112,11 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
     randomizado = list(range(size))
     random.shuffle(randomizado)
     cantidadCambio = round(size * prop_n_l_s + 0.5)
-    Y2 = copy.copy(Y)
+
     for x in range(cantidadCambio):
-        Y2[randomizado[x]] = abs(1-Y2[randomizado[x]])
+        Y[randomizado[x]] = 1-Y[randomizado[x]]
     
-    return X,Y2
+    return X,Y
 
 
 
@@ -126,24 +126,30 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 # I.2. Clases y métodos a implementar
 # -----------------------------------
 
+
 # En esta sección se pide implementar cada uno de los clasificadores lineales
 # mencionados al principio. Cada uno de estos clasificadores se implementa a
 # través de una clase python, que ha de tener la siguiente estructura general:
 
 # class NOMBRE_DEL_CLASIFICADOR():
+class Clasificador_Perceptron():
 
+    def __init__(self,clases,normalizacion=False):
+        self.clasesP = clases
+        self.normalizacionP = normalizacion
+        self.pesos = None
 #     def __init__(self,clases,normalizacion=False):
 
 #          .....
-         
-#     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,
-#                 pesos_iniciales=None,
-#                 rate_decay=False):
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0])+1)]
 
-#         ......
+        self.pesos = copy.copy(pesos_iniciales)
 
-#     def clasifica_prob(self,ej):
-
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate -= (2/n**(1.5)) 
 
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
@@ -158,13 +164,23 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
                    ## self.pesos[i] = self.pesos[i] + rate*x[i]*(y-o)
                    self.pesos[i] = self.pesos[i] + rate*entr[j][i]*(clas_entr[j]-o)
         return self.pesos,pesos_iniciales   
+#     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,
+#                 pesos_iniciales=None,
+#                 rate_decay=False):
+
+#         ......
+
+#     def clasifica_prob(self,ej):
+    def clasifica_prob(self,ej):
+        pass
+
 #         ......
 
 #     def clasifica(self,ej):
-
-
+    def clasifica(self,ej):
+        pass
 #         ......
-        
+    
 
 # Explicamos a continuación cada uno de estos elementos:
 
