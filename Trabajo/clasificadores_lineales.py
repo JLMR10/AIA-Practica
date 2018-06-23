@@ -134,258 +134,25 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 # través de una clase python, que ha de tener la siguiente estructura general:
 
 # class NOMBRE_DEL_CLASIFICADOR():
-class Clasificador_Perceptron():
 
-    def __init__(self,clases,normalizacion=False):
-        self.clasesP = clases
-        self.normalizacionP = normalizacion
-        self.pesos = None
 #     def __init__(self,clases,normalizacion=False):
-
 #          .....
-    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
-
-        entr = [[1]+x for x in entr]
-
-        if not pesos_iniciales:
-            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-
-        self.pesos = copy.copy(pesos_iniciales)
-
-        rate_n = rate
-
-        for n in range(n_epochs):
-            if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
-            randomizado = list(range(len(entr)))
-            random.shuffle(randomizado)
-           
-            for j in randomizado:
-                umbral = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
-                o = 0
-                if umbral >= 0:
-                    o = 1
-                self.pesos = [self.pesos[i] + rate_n*entr[j][i]*(clas_entr[j]-o) for i in range(len(entr[0]))]
-        return self.pesos,pesos_iniciales   
 
 #     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,
 #                 pesos_iniciales=None,
 #                 rate_decay=False):
-
 #         ......
 
 #     def clasifica_prob(self,ej):
-    def clasifica_prob(self,ej):
-        pass
-
 #         ......
 
 #     def clasifica(self,ej):
-    def clasifica(self,ej):
-        ej = [1]+ej
-        umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        o = 0
-        if umbral >= 0:
-            o = 1
-        return self.clasesP[o]
 #         ......
-
-
-class Clasificador_RL_L2_Batch:
-
-    def __init__(self,clases,normalizacion=False):
-       self.clasesP = clases
-       self.normalizacionP = normalizacion
-       self.pesos = None
-
-    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-x))
-
-        entr = [[1]+x for x in entr]
-
-        if not pesos_iniciales:
-            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-        
-        self.pesos = copy.copy(pesos_iniciales)
-
-        rate_n = rate
-
-        for n in range(n_epochs):
-            if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
-            
-            Delta_w = [0]*len(self.pesos)
-            for x,y in zip(entr,clas_entr):
-                c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
-                o = sigmoide(c_in)
-                Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i]*o*(1-o) for i in range(len(x))]
-            self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
-        return self.pesos
-
-    def clasifica_prob(self,ej):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-x))
-
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return sigmoide(x)
-    
-    def clasifica(self,ej):
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
-
-class Clasificador_RL_L2_St:
-
-    def __init__(self,clases,normalizacion=False):
-       self.clasesP = clases
-       self.normalizacionP = normalizacion
-       self.pesos = None
-
-    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-x))
-
-        entr = [[1]+x for x in entr]
-
-        if not pesos_iniciales:
-            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-
-        self.pesos = copy.copy(pesos_iniciales)
-
-        rate_n = rate
-
-        for n in range(n_epochs):
-            if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
-            randomizado = list(range(len(entr)))
-            random.shuffle(randomizado)
-           
-            for j in randomizado:
-                c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
-                o = sigmoide(c_in)
-                self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i]*o*(1-o) for i in range(len(entr[j]))]
-                
-        return self.pesos,pesos_iniciales
-
-    def clasifica_prob(self,ej):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-x))
-
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return sigmoide(x)
-    
-    def clasifica(self,ej):
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
-
-
-class Clasificador_RL_ML_Batch:
-
-    def __init__(self,clases,normalizacion=False):
-       self.clasesP = clases
-       self.normalizacionP = normalizacion
-       self.pesos = None
-
-    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-round(x,5)))
-
-        entr = [[1]+x for x in entr]
-
-        if not pesos_iniciales:
-            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-        
-        self.pesos = copy.copy(pesos_iniciales)
-
-        rate_n = rate
-
-        for n in range(n_epochs):
-            if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
-            
-            Delta_w = [0]*len(self.pesos)
-            for x,y in zip(entr,clas_entr):
-                c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
-                print(c_in)
-                o = sigmoide(c_in)
-                Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i] for i in range(len(x))]
-            self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
-        return self.pesos
-
-    def clasifica_prob(self,ej):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-round(x,5)))
-
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return sigmoide(x)
-    
-    def clasifica(self,ej):
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
-
-class Clasificador_RL_ML_St:
-
-    def __init__(self,clases,normalizacion=False):
-       self.clasesP = clases
-       self.normalizacionP = normalizacion
-       self.pesos = None
-
-    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-round(x,5)))
-
-        entr = [[1]+x for x in entr]
-
-        if not pesos_iniciales:
-            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-
-        self.pesos = copy.copy(pesos_iniciales)
-
-        rate_n = rate
-
-        for n in range(n_epochs):
-            if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
-            randomizado = list(range(len(entr)))
-            random.shuffle(randomizado)
-           
-            for j in randomizado:
-                c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
-                print(c_in)
-                o = sigmoide(c_in)
-                self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i] for i in range(len(entr[j]))]
-                
-        return self.pesos,pesos_iniciales
-
-    def clasifica_prob(self,ej):
-
-        def sigmoide(x):
-            return 1/(1+math.exp(-round(x,5)))
-
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return sigmoide(x)
-    
-    def clasifica(self,ej):
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
-
 
 # Explicamos a continuación cada uno de estos elementos:
 
 # * NOMBRE_DEL_CLASIFICADOR:
 # --------------------------
-
 
 #  Este es el nombre de la clase que implementa el clasificador. 
 #  Obligatoriamente se han de usar cada uno de los siguientes
@@ -405,8 +172,6 @@ class Clasificador_RL_ML_St:
 
 #  - Regresión logística, maximizando verosimilitud, estocástico: 
 #                       Clasificador_RL_ML_St
-
-
 
 # * Constructor de la clase:
 # --------------------------
@@ -431,8 +196,6 @@ class Clasificador_RL_ML_St:
 #    sobre las nuevas instancias que se quieran clasificar.  NOTA: se permite
 #    usar la biblioteca numpy para calcular la media, la desviación típica, y
 #    en general para cualquier cálculo matemático.
-
-
 
 # * Método entrena:
 # -----------------
@@ -473,42 +236,12 @@ class Clasificador_RL_ML_St:
 #  epoch recorrer todos los ejemplos del conjunto de entrenamiento en un orden
 #  aleatorio distinto cada vez.  
 
-X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
-X1e,Y1e=X1[:300],Y1[:300]
-X1t,Y1t=X1[300:],Y1[300:]
-
-clas_pb1=Clasificador_Perceptron([0,1])
-clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-clas_pb2=Clasificador_RL_L2_Batch([0,1])
-clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-clas_pb3=Clasificador_RL_L2_St([0,1])
-clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-clas_pb4=Clasificador_RL_ML_Batch([0,1])
-clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-clas_pb5=Clasificador_RL_ML_St([0,1])
-clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
 # * Método clasifica_prob:
 # ------------------------
 
 #  El método que devuelve la probabilidad de pertenecer a la clase (la que se
 #  ha tomado como clase 1), calculada para un nuevo ejemplo. Este método no es
 #  necesario incluirlo para el perceptrón umbral.
-
-
         
 # * Método clasifica:
 # -------------------
@@ -571,31 +304,282 @@ class ClasificadorNoEntrenado(Exception): pass
 # Out[13]: 0.82
 # ----------------------------------------------------------------
 
+##################################################################################
+
+##Funciones Globales para los clasificadores
+
+def f_umbral(x):
+    res = 0
+    if x >= 0:
+        res = 1
+    return res
+
+def f_sigmoide(x):
+    res = 0
+    if (x<0):
+        res = 1 - 1/(1+math.exp(x))
+    else:
+        res = 1/(1+math.exp(-x))
+    return res
+
+##################################################################################
+
+## Calsificador del Perceptron
+
+class Clasificador_Perceptron():
+
+    def __init__(self,clases,normalizacion=False):
+        self.clasesP = clases
+        self.normalizacionP = normalizacion
+        self.pesos = None
 
 
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        entr = [[1]+x for x in entr]
+
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
+
+        self.pesos = copy.copy(pesos_iniciales)
+
+        rate_n = rate
+
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate_n = rate + (2/n**(1.5)) 
+            randomizado = list(range(len(entr)))
+            random.shuffle(randomizado)
+            
+            for j in randomizado:
+                umbral = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
+                o = f_umbral(umbral)
+                self.pesos = [self.pesos[i] + rate_n*entr[j][i]*(clas_entr[j]-o) for i in range(len(entr[0]))]
+
+        return self.pesos,pesos_iniciales   
 
 
+    def clasifica_prob(self,ej):
+        pass
 
 
+    def clasifica(self,ej):
+        ej = [1]+ej
+        umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+        o = f_umbral(umbral)
+        return self.clasesP[o]
 
+##################################################################################
 
+## Clasificador de Regresion Lineal Bach  minimizando L2 
 
+class Clasificador_RL_L2_Batch:
 
+    def __init__(self,clases,normalizacion=False):
+       self.clasesP = clases
+       self.normalizacionP = normalizacion
+       self.pesos = None
 
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        entr = [[1]+x for x in entr]
 
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
+        
+        self.pesos = copy.copy(pesos_iniciales)
 
+        rate_n = rate
 
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate_n = rate + (2/n**(1.5)) 
+            
+            Delta_w = [0]*len(self.pesos)
+            for x,y in zip(entr,clas_entr):
+                c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
+                o = f_sigmoide(c_in)
+                Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i]*o*(1-o) for i in range(len(x))]
+            self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
+        return self.pesos
 
-
-
-
-
+    def clasifica_prob(self,ej):
+        ej = [1]+ej
+        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+        return f_sigmoide(x)
     
+    def clasifica(self,ej):
+        prob = self.clasifica_prob(ej)
+        return self.clasesP[round(prob)]
 
+##################################################################################
+
+## Calsificador Regresion Lineal St minimizando L2
+
+class Clasificador_RL_L2_St:
+
+    def __init__(self,clases,normalizacion=False):
+       self.clasesP = clases
+       self.normalizacionP = normalizacion
+       self.pesos = None
+
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        entr = [[1]+x for x in entr]
+
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
+
+        self.pesos = copy.copy(pesos_iniciales)
+
+        rate_n = rate
+
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate_n = rate + (2/n**(1.5)) 
+            randomizado = list(range(len(entr)))
+            random.shuffle(randomizado)
+           
+            for j in randomizado:
+                c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
+                o = f_sigmoide(c_in)
+                self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i]*o*(1-o) for i in range(len(entr[j]))]
+                
+        return self.pesos,pesos_iniciales
+
+    def clasifica_prob(self,ej):
+        ej = [1]+ej
+        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+        return f_sigmoide(x)
     
+    def clasifica(self,ej):
+        prob = self.clasifica_prob(ej)
+        return self.clasesP[round(prob)]
 
+##################################################################################
 
+##Clasificador Regresion Lineal Bach maximizando verosimilitud
 
+class Clasificador_RL_ML_Batch:
+
+    def __init__(self,clases,normalizacion=False):
+       self.clasesP = clases
+       self.normalizacionP = normalizacion
+       self.pesos = None
+
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        entr = [[1]+x for x in entr]
+
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
+        
+        self.pesos = copy.copy(pesos_iniciales)
+
+        rate_n = rate
+
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate_n = rate + (2/n**(1.5)) 
+            
+            Delta_w = [0]*len(self.pesos)
+            for x,y in zip(entr,clas_entr):
+                c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
+                o = f_sigmoide(c_in)
+                Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i] for i in range(len(x))]
+            self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
+        return self.pesos
+
+    def clasifica_prob(self,ej):
+        ej = [1]+ej
+        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+        return f_sigmoide(x)
+    
+    def clasifica(self,ej):
+        prob = self.clasifica_prob(ej)
+        return self.clasesP[round(prob)]
+
+##################################################################################
+
+##Clasificador Regresion Lineal St maximizando verosimilitud 
+
+class Clasificador_RL_ML_St:
+
+    def __init__(self,clases,normalizacion=False):
+       self.clasesP = clases
+       self.normalizacionP = normalizacion
+       self.pesos = None
+
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        entr = [[1]+x for x in entr]
+
+        if not pesos_iniciales:
+            pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
+
+        self.pesos = copy.copy(pesos_iniciales)
+
+        rate_n = rate
+
+        for n in range(n_epochs):
+            if not n == 0 and rate_decay:
+                rate_n = rate + (2/n**(1.5)) 
+            randomizado = list(range(len(entr)))
+            random.shuffle(randomizado)
+           
+            for j in randomizado:
+                c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
+                o = f_sigmoide(c_in)
+                self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i] for i in range(len(entr[j]))]
+                
+        return self.pesos,pesos_iniciales
+
+    def clasifica_prob(self,ej):
+        ej = [1]+ej
+        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+        return f_sigmoide(x)
+    
+    def clasifica(self,ej):
+        prob = self.clasifica_prob(ej)
+        return self.clasesP[round(prob)]
+
+##################################################################################
+
+##################################################################################
+
+##Pruebas Clasificadores
+
+#Perceptron
+X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
+X1e,Y1e=X1[:300],Y1[:300]
+X1t,Y1t=X1[300:],Y1[300:]
+
+#Regresion Lineal Bach minimizando L2
+clas_pb1=Clasificador_Perceptron([0,1])
+clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+#Regresion Lineal St minimizando L2
+clas_pb2=Clasificador_RL_L2_Batch([0,1])
+clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+#Regresion Lineal Bach maximizando verosimilitud
+clas_pb3=Clasificador_RL_L2_St([0,1])
+clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+#Regresion Lineal St maximizando verosimilitud
+clas_pb4=Clasificador_RL_ML_Batch([0,1])
+clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+clas_pb5=Clasificador_RL_ML_St([0,1])
+clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+##################################################################################
+
+##################################################################################
 
 # --------------------------
 # I.3. Curvas de aprendizaje
@@ -846,4 +830,4 @@ import matplotlib.pyplot as plt
 
 # Por dar una referencia, se pueden obtener clasificadores para el problema de
 # los votos con un rendimiento sobre el test mayor al 90%, y para los dígitos
-# un rendimiento superior al 80%.  
+# un rendimiento superior al 80%. 
