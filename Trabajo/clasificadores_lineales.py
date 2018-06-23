@@ -322,6 +322,21 @@ def f_sigmoide(x):
         res = 1/(1+math.exp(-x))
     return res
 
+def f_normalizadora(xs):
+    ys = []
+    for x in xs:
+        m_i = numpy.mean(x)
+        d_i = numpy.std(x)
+        y = [(x[i]-m_i)/d_i for i in range(len(x))]
+        ys.append(y)
+    return ys
+
+def convertidor(clases,entr_clas):
+    res = []
+    for x in entr_clas:
+        res.append(clases.index(x))
+    return res
+
 ##################################################################################
 
 ## Calsificador del Perceptron
@@ -335,6 +350,9 @@ class Clasificador_Perceptron():
 
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if self.normalizacionP:
+            entr = f_normalizadora(entr)
+
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -363,6 +381,8 @@ class Clasificador_Perceptron():
 
 
     def clasifica(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
         ej = [1]+ej
         umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
         o = f_umbral(umbral)
@@ -380,6 +400,9 @@ class Clasificador_RL_L2_Batch:
        self.pesos = None
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if self.normalizacionP:
+            entr = f_normalizadora(entr)
+
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -402,11 +425,17 @@ class Clasificador_RL_L2_Batch:
         return self.pesos
 
     def clasifica_prob(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         ej = [1]+ej
         x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
         return f_sigmoide(x)
     
     def clasifica(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         prob = self.clasifica_prob(ej)
         return self.clasesP[round(prob)]
 
@@ -422,6 +451,9 @@ class Clasificador_RL_L2_St:
        self.pesos = None
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if self.normalizacionP:
+            entr = f_normalizadora(entr)
+
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -445,11 +477,17 @@ class Clasificador_RL_L2_St:
         return self.pesos,pesos_iniciales
 
     def clasifica_prob(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         ej = [1]+ej
         x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
         return f_sigmoide(x)
     
     def clasifica(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         prob = self.clasifica_prob(ej)
         return self.clasesP[round(prob)]
 
@@ -465,6 +503,9 @@ class Clasificador_RL_ML_Batch:
        self.pesos = None
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if self.normalizacionP:
+            entr = f_normalizadora(entr)
+
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -487,11 +528,17 @@ class Clasificador_RL_ML_Batch:
         return self.pesos
 
     def clasifica_prob(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         ej = [1]+ej
         x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
         return f_sigmoide(x)
     
     def clasifica(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         prob = self.clasifica_prob(ej)
         return self.clasesP[round(prob)]
 
@@ -507,6 +554,9 @@ class Clasificador_RL_ML_St:
        self.pesos = None
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
+        if self.normalizacionP:
+            entr = f_normalizadora(entr)
+
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -530,11 +580,17 @@ class Clasificador_RL_ML_St:
         return self.pesos,pesos_iniciales
 
     def clasifica_prob(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         ej = [1]+ej
         x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
         return f_sigmoide(x)
     
     def clasifica(self,ej):
+        if self.normalizacionP:
+            ej = f_normalizadora([ej])[0]
+
         prob = self.clasifica_prob(ej)
         return self.clasesP[round(prob)]
 
