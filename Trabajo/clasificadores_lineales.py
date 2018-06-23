@@ -352,7 +352,7 @@ class Clasificador_Perceptron():
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
         if self.normalizacionP:
             entr = f_normalizadora(entr)
-
+        entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -361,7 +361,7 @@ class Clasificador_Perceptron():
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
-
+        vector_accuracy = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
                 rate_n = rate + (2/n**(1.5)) 
@@ -373,7 +373,9 @@ class Clasificador_Perceptron():
                 o = f_umbral(umbral)
                 self.pesos = [self.pesos[i] + rate_n*entr[j][i]*(clas_entr[j]-o) for i in range(len(entr[0]))]
 
-        return self.pesos,pesos_iniciales   
+            vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
+
+        return vector_accuracy  
 
 
     def clasifica_prob(self,ej):
@@ -402,7 +404,7 @@ class Clasificador_RL_L2_Batch:
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
         if self.normalizacionP:
             entr = f_normalizadora(entr)
-
+        entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -411,18 +413,22 @@ class Clasificador_RL_L2_Batch:
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
-
+        vector_accuracy = []
+        vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
                 rate_n = rate + (2/n**(1.5)) 
-            
+            error = 0
             Delta_w = [0]*len(self.pesos)
             for x,y in zip(entr,clas_entr):
                 c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
                 o = f_sigmoide(c_in)
                 Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i]*o*(1-o) for i in range(len(x))]
+                error += (y-o)**2
             self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
-        return self.pesos
+            vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
+            vector_error.append(error)
+        return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
         if self.normalizacionP:
@@ -453,7 +459,7 @@ class Clasificador_RL_L2_St:
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
         if self.normalizacionP:
             entr = f_normalizadora(entr)
-
+        entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -462,19 +468,23 @@ class Clasificador_RL_L2_St:
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
-
+        vector_accuracy = []
+        vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
                 rate_n = rate + (2/n**(1.5)) 
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
-           
+            error = 0
             for j in randomizado:
                 c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
                 o = f_sigmoide(c_in)
                 self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i]*o*(1-o) for i in range(len(entr[j]))]
-                
-        return self.pesos,pesos_iniciales
+                error += (clas_entr[j]-o)**2
+            vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
+            vector_error.append(error)
+
+        return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
         if self.normalizacionP:
@@ -505,7 +515,7 @@ class Clasificador_RL_ML_Batch:
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
         if self.normalizacionP:
             entr = f_normalizadora(entr)
-
+        entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -514,18 +524,25 @@ class Clasificador_RL_ML_Batch:
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
-
+        vector_accuracy = []
+        vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
                 rate_n = rate + (2/n**(1.5)) 
-            
+            error = 0
             Delta_w = [0]*len(self.pesos)
             for x,y in zip(entr,clas_entr):
                 c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
                 o = f_sigmoide(c_in)
                 Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i] for i in range(len(x))]
+                if y==1:
+                    error+= -numpy.log10(1+math.exp(-c_in))
+                else:
+                    error+= -numpy.log10(1+math.exp(c_in))
             self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
-        return self.pesos
+            vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
+            vector_error.append(error)
+        return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
         if self.normalizacionP:
@@ -556,7 +573,7 @@ class Clasificador_RL_ML_St:
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False):
         if self.normalizacionP:
             entr = f_normalizadora(entr)
-
+        entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
 
         if not pesos_iniciales:
@@ -565,19 +582,25 @@ class Clasificador_RL_ML_St:
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
-
+        vector_accuracy = []
+        vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
                 rate_n = rate + (2/n**(1.5)) 
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
-           
+            error = 0
             for j in randomizado:
                 c_in = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
                 o = f_sigmoide(c_in)
                 self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i] for i in range(len(entr[j]))]
-                
-        return self.pesos,pesos_iniciales
+                if clas_entr[j]==1:
+                    error+= -numpy.log10(1+math.exp(-c_in))
+                else:
+                    error+= -numpy.log10(1+math.exp(c_in))
+            vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
+            vector_error.append(error)
+        return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
         if self.normalizacionP:
@@ -600,38 +623,80 @@ class Clasificador_RL_ML_St:
 
 ##Pruebas Clasificadores
 
-#Perceptron
-X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
-X1e,Y1e=X1[:300],Y1[:300]
-X1t,Y1t=X1[300:],Y1[300:]
+def prueba(mostrar=False):
+    #Perceptron
+    X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
+    X1e,Y1e=X1[:300],Y1[:300]
+    X1t,Y1t=X1[300:],Y1[300:]
 
-#Regresion Lineal Bach minimizando L2
-clas_pb1=Clasificador_Perceptron([0,1])
-clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-#Regresion Lineal St minimizando L2
-clas_pb2=Clasificador_RL_L2_Batch([0,1])
-clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-#Regresion Lineal Bach maximizando verosimilitud
-clas_pb3=Clasificador_RL_L2_St([0,1])
-clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-#Regresion Lineal St maximizando verosimilitud
-clas_pb4=Clasificador_RL_ML_Batch([0,1])
-clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-
-clas_pb5=Clasificador_RL_ML_St([0,1])
-clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
-print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    #Regresion Lineal Bach minimizando L2
+    clas_pb1=Clasificador_Perceptron([0,1])
+    ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    if(False):
+        plt.plot(range(1,len(ac)+1),ac,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Porcentaje de acierto')
+        plt.show()
+    # plt.plot(range(1,len(errores)+1),errores,marker='o')
+# plt.xlabel('Epochs')
+# plt.ylabel('Error')
+# plt.show()
+    #Regresion Lineal St minimizando L2
+    clas_pb2=Clasificador_RL_L2_Batch([0,1])
+    ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    if(False):
+        plt.plot(range(1,len(ac2)+1),ac2,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Porcentaje de acierto')
+        plt.show()
+        plt.plot(range(1,len(error2)+1),error2,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Error Cuadrático')
+        plt.show()
+    #Regresion Lineal Bach maximizando verosimilitud
+    clas_pb3=Clasificador_RL_L2_St([0,1])
+    ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    if(False):
+        plt.plot(range(1,len(ac3)+1),ac3,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Porcentaje de acierto')
+        plt.show()
+        plt.plot(range(1,len(error3)+1),error3,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Error Cuadrático')
+        plt.show()
+    #Regresion Lineal St maximizando verosimilitud
+    clas_pb4=Clasificador_RL_ML_Batch([0,1])
+    ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    if(True):
+        plt.plot(range(1,len(ac4)+1),ac4,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Porcentaje de acierto')
+        plt.show()
+        plt.plot(range(1,len(error4)+1),error4,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Log verosimilitud')
+        plt.show()
+    clas_pb5=Clasificador_RL_ML_St([0,1])
+    ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    if(False):
+        plt.plot(range(1,len(ac5)+1),ac5,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Porcentaje de acierto')
+        plt.show()
+        plt.plot(range(1,len(error5)+1),error5,marker='o')
+        plt.xlabel('Epochs')
+        plt.ylabel('Log Verosimilitud')
+        plt.show()
 
 ##################################################################################
 
