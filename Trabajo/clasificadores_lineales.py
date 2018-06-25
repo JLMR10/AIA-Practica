@@ -337,6 +337,15 @@ def convertidor(clases,entr_clas):
         res.append(clases.index(x))
     return res
 
+def convertidorMulticlase(clases,entr_clas):
+    res = []
+    for x in entr_clas:
+        if [x]==clases[1]:
+            res.append(1)
+        else:
+            res.append(0)
+    return res
+
 ##################################################################################
 
 ## Calsificador del Perceptron
@@ -535,10 +544,10 @@ class Clasificador_RL_ML_Batch:
                 c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
                 o = f_sigmoide(c_in)
                 Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i] for i in range(len(x))]
-                if y==1:
-                    error+= -numpy.log10(1+math.exp(-c_in))
-                else:
-                    error+= -numpy.log10(1+math.exp(c_in))
+                # if y==1:
+                #     error+= -numpy.log10(1+math.exp(-c_in))
+                # else:
+                #     error+= -numpy.log10(1+math.exp(c_in))
             self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
             vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
             vector_error.append(error)
@@ -645,7 +654,7 @@ def prueba(mostrar=False):
     #Regresion Lineal St minimizando L2
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
     ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    ##print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     if(False):
         plt.plot(range(1,len(ac2)+1),ac2,marker='o')
@@ -659,7 +668,7 @@ def prueba(mostrar=False):
     #Regresion Lineal Bach maximizando verosimilitud
     clas_pb3=Clasificador_RL_L2_St([0,1])
     ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    ##print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     if(False):
         plt.plot(range(1,len(ac3)+1),ac3,marker='o')
@@ -673,9 +682,9 @@ def prueba(mostrar=False):
     #Regresion Lineal St maximizando verosimilitud
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
     ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    ##print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(True):
+    if(False):
         plt.plot(range(1,len(ac4)+1),ac4,marker='o')
         plt.xlabel('Epochs')
         plt.ylabel('Porcentaje de acierto')
@@ -686,7 +695,7 @@ def prueba(mostrar=False):
         plt.show()
     clas_pb5=Clasificador_RL_ML_St([0,1])
     ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    ##print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     if(False):
         plt.plot(range(1,len(ac5)+1),ac5,marker='o')
@@ -772,7 +781,7 @@ import matplotlib.pyplot as plt
 #  Esta técnica construye un clasificador multiclase a partir de
 #  clasificadores binarios que devuelven probabilidades (como es el caso de la
 #  regresión logística). Para cada posible valor de clasificación, se
-#  entrena un clasificador que estime cómo de probable es pertemecer a esa
+#  entrena un clasificador que estime cómo de probable es pertenecer a esa
 #  clase, frente al resto. Este conjunto de clasificadores binarios se usa
 #  para dar la clasificación de un ejemplo nuevo, sin más que devolver la
 #  clase para la que su correspondiente clasificador binario da una mayor
@@ -822,6 +831,28 @@ import matplotlib.pyplot as plt
 # Out[34]: ('Iris-versicolor', 'Iris-versicolor')
 # ----------------------------------------------------------------
 
+class Clasificador_RL_OvR():
+
+    def __init__(self,class_clasif,clases):
+        self.class_clasifC=class_clasif
+        self.clasesC=clases
+        self.pesosPorClases = []
+
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
+        for i in range(len(self.clasesC)):
+            clasesAux = [self.clasesC[0:i]+self.clasesC[i+1:],self.clasesC[i:i+1]]
+            clasificador = self.class_clasifC(clasesAux)
+            clas_entrAux = convertidorMulticlase(clasesAux,clas_entr)
+            clasificador.entrena(entr,clas_entrAux,n_epochs,rate,None,rate_decay)
+            self.pesosPorClases.append(clasificador.pesos)
+
+    def clasifica(self,ej):
+        x = []
+        ej = [1]+ej
+        for j in range(len(self.pesosPorClases)):
+            y = sum(self.pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
+            x.append(f_sigmoide(y))
+        return self.clasesC[x.index(max(x))]
 
 
 
@@ -836,7 +867,7 @@ import matplotlib.pyplot as plt
 
 #  En concreto, se pide implementar una clase python Clasificador_RL_Softmax 
 #  con la siguiente estructura, y que implemente el entrenamiento y la 
-#  clasificación como seexplica en el tema 5:
+#  clasificación como se explica en el tema 5:
 
 # class Clasificador_RL_Softmax():
 
