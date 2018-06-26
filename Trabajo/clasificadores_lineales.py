@@ -363,7 +363,7 @@ class Clasificador_Perceptron():
             entr = f_normalizadora(entr)
         entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
-
+        clas_entr = convertidor(self.clasesP,clas_entr)
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
 
@@ -415,6 +415,7 @@ class Clasificador_RL_L2_Batch:
             entr = f_normalizadora(entr)
         entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
+        clas_entr = convertidor(self.clasesP,clas_entr)
 
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
@@ -470,7 +471,7 @@ class Clasificador_RL_L2_St:
             entr = f_normalizadora(entr)
         entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
-
+        clas_entr = convertidor(self.clasesP,clas_entr)
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
 
@@ -526,7 +527,7 @@ class Clasificador_RL_ML_Batch:
             entr = f_normalizadora(entr)
         entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
-
+        clas_entr = convertidor(self.clasesP,clas_entr)
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
         
@@ -584,7 +585,7 @@ class Clasificador_RL_ML_St:
             entr = f_normalizadora(entr)
         entr_aux = copy.deepcopy(entr)
         entr = [[1]+x for x in entr]
-
+        clas_entr = convertidor(self.clasesP,clas_entr)
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
 
@@ -841,7 +842,7 @@ class Clasificador_RL_OvR():
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
         for i in range(len(self.clasesC)):
             clasesAux = [self.clasesC[0:i]+self.clasesC[i+1:],self.clasesC[i:i+1]]
-            clasificador = self.class_clasifC(clasesAux)
+            clasificador = self.class_clasifC([0,1])
             clas_entrAux = convertidorMulticlase(clasesAux,clas_entr)
             clasificador.entrena(entr,clas_entrAux,n_epochs,rate,None,rate_decay)
             self.pesosPorClases.append(clasificador.pesos)
@@ -910,8 +911,7 @@ class Clasificador_RL_Softmax():
                             if clas_entr[j]==self.clasesC[m]:
                                 y = 1
                             self.pesos[m][i]+= rate_n*(y-formula_o(m,j))*entr[j][i]
-                            
-                        
+                             
 
     def clasifica(self,ej):
         ej = [1]+ej
@@ -924,7 +924,7 @@ class Clasificador_RL_Softmax():
 
         for m in range(len(self.clasesC)):
             vector_prob[m] = formula_o(m)
-            
+
         return self.clasesC[vector_prob.index(max(vector_prob))]
             
 
@@ -951,6 +951,7 @@ class Clasificador_RL_Softmax():
 # NOTA: clf es un objeto de las clases definidas en
 # los apartados anteriores, que además debe estar ya entrenado. 
 
+from iris import *
 
 # Por ejemplo (conectando con el ejemplo anterior):
 
@@ -958,10 +959,14 @@ class Clasificador_RL_Softmax():
 # In [36]: rendimiento(clas_rlml1,iris_entr,iris_entr_clas)
 # Out[36]: 0.9666666666666667
 # ---------------------------------------------------------
+def rendimiento(clasificador,entr,clas_entr):
+    return sum(clasificador.clasifica(x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
 
-
-
-
+def prueba2():
+    iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
+    clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_ML_St,iris_clases)
+    clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
+    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
 # ----------------------------------
 # III.2 Aplicando los clasificadores
 # ----------------------------------
