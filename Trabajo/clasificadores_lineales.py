@@ -882,7 +882,51 @@ class Clasificador_RL_OvR():
 
 #        .....            
 
+class Clasificador_RL_Softmax():
 
+    def __init__(self,clases):
+        self.clasesC=clases
+        self.pesos = []
+    
+    def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
+            def formula_o(clase,j):
+                numerador = math.exp(sum(self.pesos[clase][i]*entr[j][i] for i in range(len(entr[j]))))
+                denominador = sum(math.exp(sum(self.pesos[k][i]*entr[j][i] for i in range(len(entr[j])))) for k in range(len(self.clasesC)))
+                return numerador/denominador
+
+            entr = [[1]+x for x in entr]
+            self.pesos = [[random.randint(-1,1) for x in range(len(entr[0]))] for n in range(len(self.clasesC))]
+            rate_n = rate
+
+            for n in range(n_epochs):
+                if not n == 0 and rate_decay:
+                    rate_n = rate + (2/n**(1.5)) 
+                randomizado = list(range(len(entr)))
+                random.shuffle(randomizado)
+                for j in randomizado:
+                    for m in range(len(self.clasesC)):
+                        for i in range(len(self.pesos[m])):
+                            y = 0
+                            if clas_entr[j]==self.clasesC[m]:
+                                y = 1
+                            self.pesos[m][i]+= rate_n*(y-formula_o(m,j))*entr[j][i]
+                            
+                        
+
+    def clasifica(self,ej):
+        ej = [1]+ej
+        def formula_o(clase):
+            numerador = math.exp(sum(self.pesos[clase][i]*ej[i] for i in range(len(ej))))
+            denominador = sum(math.exp(sum(self.pesos[k][i]*ej[i] for i in range(len(ej)))) for k in range(len(self.clasesC)))
+            return numerador/denominador
+
+        vector_prob = [0]*len(self.clasesC)
+
+        for m in range(len(self.clasesC)):
+            vector_prob[m] = formula_o(m)
+            
+        return self.clasesC[vector_prob.index(max(vector_prob))]
+            
 
 
 
