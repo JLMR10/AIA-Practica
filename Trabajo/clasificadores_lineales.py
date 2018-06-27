@@ -992,6 +992,17 @@ def prueba2():
 #    lean esos ficheros y obtengan los datos en el mismo formato python en el
 #    que los necesitan los algoritmos.
 
+def leer():
+    with open('imagenPrueba.txt','r') as f:
+        a = []
+        b = []
+        for line in f:
+            b.append(line[-1])
+            a.append(line[:1])
+    f.closed
+    print(len(a),"====",len(a[0]))
+    return a,b
+
 #  - Cualquier otro problema de clasificación (por ejemplo,
 #    alguno de los que se pueden encontrar en UCI Machine Learning repository,
 #    http://archive.ics.uci.edu/ml/). Téngase en cuenta que el conjunto de
