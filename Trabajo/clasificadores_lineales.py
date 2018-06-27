@@ -1011,7 +1011,7 @@ def leer():
                 total.append(v)
                 v = []
         f.closed
-    return len(total)
+    return total
 
 #  - Cualquier otro problema de clasificación (por ejemplo,
 #    alguno de los que se pueden encontrar en UCI Machine Learning repository,
