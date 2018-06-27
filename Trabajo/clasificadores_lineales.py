@@ -993,11 +993,11 @@ def prueba2():
 #    que los necesitan los algoritmos.
 
 def leer():
-    with open('digitdata/trainingimages','r') as f:
+    with open('digitdata/trainingimages','r') as fichero:
         total = []
         v = []
         i=0
-        for linea in f:
+        for linea in fichero:
             w = []
             i+=1
             for posicion in linea[:-1]:
@@ -1010,7 +1010,7 @@ def leer():
                 i=0
                 total.append(v)
                 v = []
-        f.closed
+        fichero.closed
     return total
 
 #  - Cualquier otro problema de clasificación (por ejemplo,
