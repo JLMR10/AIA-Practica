@@ -993,15 +993,25 @@ def prueba2():
 #    que los necesitan los algoritmos.
 
 def leer():
-    with open('imagenPrueba.txt','r') as f:
-        a = []
-        b = []
-        for line in f:
-            b.append(line[-1])
-            a.append(line[:1])
-    f.closed
-    print(len(a),"====",len(a[0]))
-    return a,b
+    with open('digitdata/trainingimages','r') as f:
+        total = []
+        v = []
+        i=0
+        for x in f:
+            w = []
+            i+=1
+            for s in x[:-1]:
+                if " " == s:
+                    w.append(0)
+                else:
+                    w.append(1)
+            v.append(w)
+            if(i==28):
+                i=0
+                total.append(v)
+                v = []
+        f.closed
+    return len(total)
 
 #  - Cualquier otro problema de clasificación (por ejemplo,
 #    alguno de los que se pueden encontrar en UCI Machine Learning repository,
