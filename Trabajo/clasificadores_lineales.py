@@ -997,11 +997,11 @@ def leer():
         total = []
         v = []
         i=0
-        for x in f:
+        for linea in f:
             w = []
             i+=1
-            for s in x[:-1]:
-                if " " == s:
+            for posicion in linea[:-1]:
+                if " " == posicion:
                     w.append(0)
                 else:
                     w.append(1)
