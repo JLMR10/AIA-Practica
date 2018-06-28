@@ -1088,30 +1088,111 @@ def crearDataSetUCI():
         fichero.closed
 
     with open('wineData.py','w') as escritura:
-        escritura.write("wine_entr = {0}\n".format(entr[:100]))
-        escritura.write("wine_clas_entr = {0}\n".format(clas_entr))
-        escritura.write("wine_prueba = {0}\n".format(entr[100:]))
-        escritura.write("wine_clas_prueba = {0}\n".format(clas_entr[100:]))
+        escritura.write("wine_entr = {0}\n".format(entr[:47]+entr[59:115]+entr[129:168]))
+        escritura.write("wine_clas_entr = {0}\n".format(clas_entr[:47]+clas_entr[59:115]+clas_entr[129:168]))
+        escritura.write("wine_prueba = {0}\n".format(entr[47:59]+entr[115:129]+entr[168:]))
+        escritura.write("wine_clas_prueba = {0}\n".format(clas_entr[47:59]+clas_entr[115:129]+clas_entr[168:]))
         escritura.closed
+    print(clas_entr[47:59]+clas_entr[115:129]+clas_entr[168:])
 
 from wineData import *
-## 59 clase 1, 
+## 59 clase 1, 71 clase 2, 48 clase 3 --> 12 c1 para prueba, 14 c2 para prueba, 10  c3 para prueba.
 #def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False): Perceptrón
 def mejorClasificadorWine():
     entr = wine_entr
     clas_entr = wine_clas_entr
-    n_epochs = 100
-    rate = 0.1
-    pesos_iniciales = None
-    rate_decay = False
-    print(sum(x==2 for x in clas_entr))
-    print(len(clas_entr))
-    cp = Clasificador_Perceptron(list(set(clas_entr)))
-    cp.entrena(entr,clas_entr,n_epochs,rate,pesos_iniciales,rate_decay)
-    print("Rendimiento del perceptrón:",rendimiento(cp,entr,clas_entr))
+    n_epochs = 1000
+    rate = 0.01
+    rate_decay = True
+    clasificadores = []
+    rendimientos = []
+    clasificadorMLBatch=Clasificador_RL_OvR(Clasificador_RL_ML_Batch,list(set(wine_clas_entr)))
+    clasificadorMLBatch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorMLBatch)
+    rendimientoMLBatch = rendimiento(clasificadorMLBatch,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoMLBatch)
+    print("Rendimiento del OvR-MLBatch:",rendimientoMLBatch)
+    
+    clasficadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,list(set(wine_clas_entr)))
+    clasficadorL2Batch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasficadorL2Batch)
+    rendimientoL2Batch = rendimiento(clasficadorL2Batch,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoL2Batch)
+    print("Rendimiento del OvR-L2Batch:",rendimientoL2Batch)
 
+    clasficadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,list(set(wine_clas_entr)))
+    clasficadorL2St.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasficadorL2St)
+    rendimientoL2St = rendimiento(clasficadorL2St,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoL2St)
+    print("Rendimiento del OvR-L2St:",rendimientoL2St)
 
+    clasificadorPer=Clasificador_RL_OvR(Clasificador_Perceptron,list(set(wine_clas_entr)))
+    clasificadorPer.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorPer)
+    rendimientoPer = rendimiento(clasificadorPer,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoPer)
+    print("Rendimiento del Perceptrón:",rendimientoPer)
 
+    return clasificadores[rendimientos.index(max(rendimientos))]
+## m es el peso del mejor clasificador    
+## probarPesos(list(set(wine_clas_entr)),m.pesosPorClases)
+## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
+def probarPesos(clases,pesosPorClases):
+    def clasifica(ej):
+        x = []
+        ej = [1]+ej
+        for j in range(len(pesosPorClases)):
+            y = sum(pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
+            x.append(f_sigmoide(y))
+        return clases[x.index(max(x))]
+    return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
+
+# In [60]: m = mejorClasificadorWine()
+# Rendimiento del OvR: 0.8888888888888888
+# pesos del anterior rendimiento
+# [[-4.464693575485346,
+#   -43.57991041638832,
+#   -9.391572151683524,
+#   -6.74739397811181,
+#   -132.7910589564548,
+#   -221.73389800636392,
+#   0.04594572086797535,
+#   10.846333937742518,
+#   -1.9918609345517928,
+#   1.0998147943667742,
+#   -15.70881245320547,
+#   -3.5378746279158166,
+#   1.912407028820642,
+#   32.616275132120016],
+#  [3.128022276706968,
+#   27.851287684572082,
+#   -22.89983158183535,
+#   4.565980602913298,
+#   70.06623491027516,
+#   192.52817131856722,
+#   14.14586297780636,
+#   20.464163304184247,
+#   0.5715583511768094,
+#   11.242848701007016,
+#   -62.70951289493242,
+#   11.26196734895127,
+#   24.908400839789365,
+#   -29.301253942773165],
+#  [2.1951112829464345,
+#   24.291241917654194,
+#   40.369633906833315,
+#   6.969099310051722,
+#   85.29402998379574,
+#   94.988009663006,
+#   -17.006795253596046,
+#   -37.569321997235576,
+#   2.454951090244822,
+#   -10.939178520538995,
+#   96.59921837480277,
+#   -10.113767433264647,
+#   -27.213090050164293,
+#   -6.3197935697498515]]
 
 #  Nótese que en cualquiera de los tres casos, consiste en encontrar el
 #  clasificador adecuado, entrenado con los parámetros y opciones
