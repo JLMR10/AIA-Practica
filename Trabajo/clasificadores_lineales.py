@@ -1077,6 +1077,41 @@ def leer():
 #    también es posible transformar atributos no numéricos en numéricos usando
 #    la técnica conocida como "one hot encoding".   
 
+def crearDataSetUCI():
+    with open('wine/wine-data.txt','r') as fichero:
+        entr = []
+        clas_entr = []
+        for linea in fichero:
+            lista = linea[:-1].split(',')
+            clas_entr.append(int(lista[0]))
+            entr.append([float(x) for x in lista[1:]])
+        fichero.closed
+
+    with open('wineData.py','w') as escritura:
+        escritura.write("wine_entr = {0}\n".format(entr[:100]))
+        escritura.write("wine_clas_entr = {0}\n".format(clas_entr))
+        escritura.write("wine_prueba = {0}\n".format(entr[100:]))
+        escritura.write("wine_clas_prueba = {0}\n".format(clas_entr[100:]))
+        escritura.closed
+
+from wineData import *
+## 59 clase 1, 
+#def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False): Perceptrón
+def mejorClasificadorWine():
+    entr = wine_entr
+    clas_entr = wine_clas_entr
+    n_epochs = 100
+    rate = 0.1
+    pesos_iniciales = None
+    rate_decay = False
+    print(sum(x==2 for x in clas_entr))
+    print(len(clas_entr))
+    cp = Clasificador_Perceptron(list(set(clas_entr)))
+    cp.entrena(entr,clas_entr,n_epochs,rate,pesos_iniciales,rate_decay)
+    print("Rendimiento del perceptrón:",rendimiento(cp,entr,clas_entr))
+
+
+
 
 #  Nótese que en cualquiera de los tres casos, consiste en encontrar el
 #  clasificador adecuado, entrenado con los parámetros y opciones
