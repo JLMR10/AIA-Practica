@@ -254,7 +254,9 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 # Si el clasificador aún no ha sido entrenado, tanto "clasifica" como
 # "clasifica_prob" deben devolver una excepción del siguiente tipo:
 
-class ClasificadorNoEntrenado(Exception): pass
+class ClasificadorNoEntrenado(Exception): 
+     def __init__(self,tipo):
+        Exception.__init__(self,"Clasificador {0} no entrenado".format(tipo))
 
 #  NOTA: Se aconseja probar el funcionamiento de los clasificadores con
 #  conjuntos de datos generados por las funciones del apartado anterior. 
@@ -348,7 +350,7 @@ def convertidorMulticlase(clases,entr_clas):
 
 ##################################################################################
 
-## Calsificador del Perceptron
+## Clasificador del Perceptron
 
 class Clasificador_Perceptron():
 
@@ -392,12 +394,16 @@ class Clasificador_Perceptron():
 
 
     def clasifica(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
-        ej = [1]+ej
-        umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        o = f_umbral(umbral)
-        return self.clasesP[o]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("perceptrón")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
+            ej = [1]+ej
+            umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+            o = f_umbral(umbral)
+            return self.clasesP[o]
+        
 
 ##################################################################################
 
@@ -441,23 +447,29 @@ class Clasificador_RL_L2_Batch:
         return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal L2 batch")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return f_sigmoide(x)
+            ej = [1]+ej
+            x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+            return f_sigmoide(x)
     
     def clasifica(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal L2 batch")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
+            prob = self.clasifica_prob(ej)
+            return self.clasesP[round(prob)]
 
 ##################################################################################
 
-## Calsificador Regresion Lineal St minimizando L2
+## Clasificador Regresion Lineal St minimizando L2
 
 class Clasificador_RL_L2_St:
 
@@ -497,19 +509,25 @@ class Clasificador_RL_L2_St:
         return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal L2 estocástico")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return f_sigmoide(x)
-    
+            ej = [1]+ej
+            x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+            return f_sigmoide(x)
+        
     def clasifica(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal L2 estocástico")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
+            prob = self.clasifica_prob(ej)
+            return self.clasesP[round(prob)]
 
 ##################################################################################
 
@@ -545,29 +563,41 @@ class Clasificador_RL_ML_Batch:
                 c_in = sum(self.pesos[i]*x[i] for i in range(len(x)))
                 o = f_sigmoide(c_in)
                 Delta_w = [Delta_w[i]+rate_n*(y-o)*x[i] for i in range(len(x))]
-                # if y==1:
-                #     error+= -numpy.log10(1+math.exp(-c_in))
-                # else:
-                #     error+= -numpy.log10(1+math.exp(c_in))
+                if y==1:
+                    if c_in < 0:
+                        error+= -numpy.log10(1+(1/1+math.exp(c_in)))
+                    else:
+                        error+= -numpy.log10(1+math.exp(-c_in))
+                else:
+                    if c_in>0:
+                        error+= -numpy.log10(1+(1/1+math.exp(-c_in)))
+                    else:
+                        error+= -numpy.log10(1+math.exp(c_in))
             self.pesos = [self.pesos[i]+Delta_w[i] for i in range(len(Delta_w))]
             vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
             vector_error.append(error)
         return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud batch")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return f_sigmoide(x)
+            ej = [1]+ej
+            x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+            return f_sigmoide(x)
     
     def clasifica(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud batch")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
+            prob = self.clasifica_prob(ej)
+            return self.clasesP[round(prob)]
 
 ##################################################################################
 
@@ -613,19 +643,25 @@ class Clasificador_RL_ML_St:
         return vector_accuracy,vector_error
 
     def clasifica_prob(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud estocástico")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        ej = [1]+ej
-        x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
-        return f_sigmoide(x)
+            ej = [1]+ej
+            x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
+            return f_sigmoide(x)
     
     def clasifica(self,ej):
-        if self.normalizacionP:
-            ej = f_normalizadora([ej])[0]
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud estocástico")
+        else:
+            if self.normalizacionP:
+                ej = f_normalizadora([ej])[0]
 
-        prob = self.clasifica_prob(ej)
-        return self.clasesP[round(prob)]
+            prob = self.clasifica_prob(ej)
+            return self.clasesP[round(prob)]
 
 ##################################################################################
 
@@ -685,7 +721,7 @@ def prueba(mostrar=False):
     ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     ##print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
+    if(True):
         plt.plot(range(1,len(ac4)+1),ac4,marker='o')
         plt.xlabel('Epochs')
         plt.ylabel('Porcentaje de acierto')
@@ -698,7 +734,7 @@ def prueba(mostrar=False):
     ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     ##print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
+    if(True):
         plt.plot(range(1,len(ac5)+1),ac5,marker='o')
         plt.xlabel('Epochs')
         plt.ylabel('Porcentaje de acierto')
@@ -848,12 +884,15 @@ class Clasificador_RL_OvR():
             self.pesosPorClases.append(clasificador.pesos)
 
     def clasifica(self,ej):
-        x = []
-        ej = [1]+ej
-        for j in range(len(self.pesosPorClases)):
-            y = sum(self.pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
-            x.append(f_sigmoide(y))
-        return self.clasesC[x.index(max(x))]
+        if not self.pesosPorClases:
+            raise ClasificadorNoEntrenado("One vs Rest")
+        else:
+            x = []
+            ej = [1]+ej
+            for j in range(len(self.pesosPorClases)):
+                y = sum(self.pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
+                x.append(f_sigmoide(y))
+            return self.clasesC[x.index(max(x))]
 
 
 
@@ -890,9 +929,9 @@ class Clasificador_RL_Softmax():
         self.pesos = []
     
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
-            def formula_o(clase,j):
-                numerador = math.exp(sum(self.pesos[clase][i]*entr[j][i] for i in range(len(entr[j]))))
-                denominador = sum(math.exp(sum(self.pesos[k][i]*entr[j][i] for i in range(len(entr[j])))) for k in range(len(self.clasesC)))
+            def formula_o(clase,j,pesos):
+                numerador = math.exp(sum(pesos[clase][i]*entr[j][i] for i in range(len(entr[j]))))
+                denominador = sum(math.exp(sum(pesos[k][i]*entr[j][i] for i in range(len(entr[j])))) for k in range(len(self.clasesC)))
                 return numerador/denominador
 
             entr = [[1]+x for x in entr]
@@ -905,27 +944,31 @@ class Clasificador_RL_Softmax():
                 randomizado = list(range(len(entr)))
                 random.shuffle(randomizado)
                 for j in randomizado:
+                    pesosAux = copy.deepcopy(self.pesos)
                     for m in range(len(self.clasesC)):
                         for i in range(len(self.pesos[m])):
                             y = 0
                             if clas_entr[j]==self.clasesC[m]:
                                 y = 1
-                            self.pesos[m][i]+= rate_n*(y-formula_o(m,j))*entr[j][i]
+                            self.pesos[m][i]+= rate_n*(y-formula_o(m,j,pesosAux))*entr[j][i]
                              
 
     def clasifica(self,ej):
-        ej = [1]+ej
-        def formula_o(clase):
-            numerador = math.exp(sum(self.pesos[clase][i]*ej[i] for i in range(len(ej))))
-            denominador = sum(math.exp(sum(self.pesos[k][i]*ej[i] for i in range(len(ej)))) for k in range(len(self.clasesC)))
-            return numerador/denominador
+        if not self.pesos:
+            raise ClasificadorNoEntrenado("Softmax")
+        else:
+            ej = [1]+ej
+            def formula_o(clase):
+                numerador = math.exp(sum(self.pesos[clase][i]*ej[i] for i in range(len(ej))))
+                denominador = sum(math.exp(sum(self.pesos[k][i]*ej[i] for i in range(len(ej)))) for k in range(len(self.clasesC)))
+                return numerador/denominador
 
-        vector_prob = [0]*len(self.clasesC)
+            vector_prob = [0]*len(self.clasesC)
 
-        for m in range(len(self.clasesC)):
-            vector_prob[m] = formula_o(m)
+            for m in range(len(self.clasesC)):
+                vector_prob[m] = formula_o(m)
 
-        return self.clasesC[vector_prob.index(max(vector_prob))]
+            return self.clasesC[vector_prob.index(max(vector_prob))]
             
 
 
@@ -967,6 +1010,20 @@ def prueba2():
     clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_ML_St,iris_clases)
     clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
     print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+
+def prueba3():
+    iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
+    clas_rlml1=Clasificador_RL_Softmax(iris_clases)
+    clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
+    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+
+def pruebaE():
+    X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
+    X1t,Y1t=X1[300:],Y1[300:]
+
+    #Regresion Lineal Bach minimizando L2
+    clas_pb1=Clasificador_Perceptron([0,1])
+    clas_pb1.clasifica(X1t[0]),Y1t[0]
 # ----------------------------------
 # III.2 Aplicando los clasificadores
 # ----------------------------------
