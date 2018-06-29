@@ -635,9 +635,15 @@ class Clasificador_RL_ML_St:
                 o = f_sigmoide(c_in)
                 self.pesos = [self.pesos[i]+rate_n*(clas_entr[j]-o)*entr[j][i] for i in range(len(entr[j]))]
                 if clas_entr[j]==1:
-                    error+= -numpy.log10(1+math.exp(-c_in))
+                    if c_in < 0:
+                        error+= -numpy.log10(1+(1/1+math.exp(c_in)))
+                    else:
+                        error+= -numpy.log10(1+math.exp(-c_in))
                 else:
-                    error+= -numpy.log10(1+math.exp(c_in))
+                    if c_in>0:
+                        error+= -numpy.log10(1+(1/1+math.exp(-c_in)))
+                    else:
+                        error+= -numpy.log10(1+math.exp(c_in))
             vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
             vector_error.append(error)
         return vector_accuracy,vector_error
@@ -721,7 +727,7 @@ def prueba(mostrar=False):
     ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     ##print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(True):
+    if(False):
         plt.plot(range(1,len(ac4)+1),ac4,marker='o')
         plt.xlabel('Epochs')
         plt.ylabel('Porcentaje de acierto')
@@ -734,7 +740,7 @@ def prueba(mostrar=False):
     ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     ##print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(True):
+    if(False):
         plt.plot(range(1,len(ac5)+1),ac5,marker='o')
         plt.xlabel('Epochs')
         plt.ylabel('Porcentaje de acierto')
@@ -874,6 +880,7 @@ class Clasificador_RL_OvR():
         self.class_clasifC=class_clasif
         self.clasesC=clases
         self.pesosPorClases = []
+        self.clasificadores = []
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
         for i in range(len(self.clasesC)):
@@ -881,6 +888,7 @@ class Clasificador_RL_OvR():
             clasificador = self.class_clasifC([0,1])
             clas_entrAux = convertidorMulticlase(clasesAux,clas_entr)
             clasificador.entrena(entr,clas_entrAux,n_epochs,rate,None,rate_decay)
+            self.clasificadores.append(clasificador)
             self.pesosPorClases.append(clasificador.pesos)
 
     def clasifica(self,ej):
@@ -888,10 +896,8 @@ class Clasificador_RL_OvR():
             raise ClasificadorNoEntrenado("One vs Rest")
         else:
             x = []
-            ej = [1]+ej
-            for j in range(len(self.pesosPorClases)):
-                y = sum(self.pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
-                x.append(f_sigmoide(y))
+            for j in range(len(self.clasificadores)):
+                x.append(self.clasificadores[j].clasifica_prob(ej))
             return self.clasesC[x.index(max(x))]
 
 
@@ -1007,9 +1013,13 @@ def rendimiento(clasificador,entr,clas_entr):
 
 def prueba2():
     iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
-    clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_ML_St,iris_clases)
-    clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
+    clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,iris_clases)
+    clas_rlml1.entrena(iris_entr,iris_entr_clas,50,rate_decay=True,rate=0.01)
+    print(clas_rlml1.pesosPorClases)
     print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+
+# [[0.05965364350603899, -0.3999226669517125, 0.44379163992616366, -5.382308278710903, -1.2374188836446136], [0.4077538960081543, -3.035385503816289, -0.8322122352029325, -0.2664800649634288, -1.3061853383455444], [-16.594108820995217, -91.32745582862998, -49.066130518434264, -62.081040815856916, -22.709358145328252]]
+# 0.6666666666666666
 
 def prueba3():
     iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
@@ -1101,38 +1111,40 @@ from wineData import *
 def mejorClasificadorWine():
     entr = wine_entr
     clas_entr = wine_clas_entr
+    clases = list(set(clas_entr))
     n_epochs = 1000
     rate = 0.01
     rate_decay = True
     clasificadores = []
     rendimientos = []
-    clasificadorMLBatch=Clasificador_RL_OvR(Clasificador_RL_ML_Batch,list(set(wine_clas_entr)))
+
+    clasificadorMLBatch=Clasificador_RL_OvR(Clasificador_RL_ML_Batch,clases)
     clasificadorMLBatch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
     clasificadores.append(clasificadorMLBatch)
     rendimientoMLBatch = rendimiento(clasificadorMLBatch,wine_prueba,wine_clas_prueba)
     rendimientos.append(rendimientoMLBatch)
     print("Rendimiento del OvR-MLBatch:",rendimientoMLBatch)
     
-    clasficadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,list(set(wine_clas_entr)))
+    clasificadorMLSt=Clasificador_RL_OvR(Clasificador_RL_ML_St,clases)
+    clasificadorMLSt.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorMLSt)
+    rendimientoMLSt = rendimiento(clasificadorMLSt,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoMLSt)
+    print("Rendimiento del OvR-MLSt:",rendimientoMLSt)
+    
+    clasficadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
     clasficadorL2Batch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
     clasificadores.append(clasficadorL2Batch)
     rendimientoL2Batch = rendimiento(clasficadorL2Batch,wine_prueba,wine_clas_prueba)
     rendimientos.append(rendimientoL2Batch)
     print("Rendimiento del OvR-L2Batch:",rendimientoL2Batch)
 
-    clasficadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,list(set(wine_clas_entr)))
+    clasficadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,clases)
     clasficadorL2St.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
     clasificadores.append(clasficadorL2St)
     rendimientoL2St = rendimiento(clasficadorL2St,wine_prueba,wine_clas_prueba)
     rendimientos.append(rendimientoL2St)
     print("Rendimiento del OvR-L2St:",rendimientoL2St)
-
-    clasificadorPer=Clasificador_RL_OvR(Clasificador_Perceptron,list(set(wine_clas_entr)))
-    clasificadorPer.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
-    clasificadores.append(clasificadorPer)
-    rendimientoPer = rendimiento(clasificadorPer,wine_prueba,wine_clas_prueba)
-    rendimientos.append(rendimientoPer)
-    print("Rendimiento del Perceptrón:",rendimientoPer)
 
     return clasificadores[rendimientos.index(max(rendimientos))]
 ## m es el peso del mejor clasificador    
@@ -1148,6 +1160,14 @@ def probarPesos(clases,pesosPorClases):
         return clases[x.index(max(x))]
     return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
 
+def probarPesosPerceptron(clases,pesosPorClases):
+    def clasifica(ej):
+        ej = [1]+ej
+        print(pesosPorClases)
+        umbral = sum(pesosPorClases[i]*ej[i] for i in range(len(ej)))
+        o = f_umbral(umbral)
+        return clases[o]
+    return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
 # In [60]: m = mejorClasificadorWine()
 # Rendimiento del OvR: 0.8888888888888888
 # pesos del anterior rendimiento
@@ -1226,3 +1246,364 @@ def probarPesos(clases,pesosPorClases):
 # Por dar una referencia, se pueden obtener clasificadores para el problema de
 # los votos con un rendimiento sobre el test mayor al 90%, y para los dígitos
 # un rendimiento superior al 80%. 
+
+
+from votos import *
+
+def mejorClasificadorVotos():
+    clases = votos_clases
+
+    entrenamiento = votos_entr
+    clases_entrenamiento = votos_entr_clas
+    
+    validacion = votos_valid
+    clases_validacion = votos_valid_clas
+
+    epoch = 100
+    decay=False
+    valor=0.001
+
+    misMetodos = []
+    metodo = []
+    acuracy = []
+
+    ## Perceptron
+    Perceptron = Clasificador_Perceptron(clases)
+    a = Perceptron.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay= decay, rate=valor)
+    acPerceptron = rendimiento(Perceptron,validacion,clases_validacion)
+    metodo.append("Perceptron:")
+    acuracy.append(acPerceptron)
+    misMetodos.append(Perceptron)
+    
+    ##Clasificador_RL_L2_Batch
+    L2_Bach = Clasificador_RL_ML_St(clases)
+    a,e = L2_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    acL2_bach = rendimiento(L2_Bach,validacion,clases_validacion)
+    metodo.append("Clasificador_RL_L2_Batch:")
+    acuracy.append(acL2_bach)
+    misMetodos.append(L2_Bach)
+ 
+    ##Clasificador_RL_L2_Batch
+    L2_St = Clasificador_RL_L2_St(clases)
+    a,e = L2_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    acL2_St = rendimiento(L2_St,validacion,clases_validacion)
+    metodo.append("Clasificador_RL_L2_St:")
+    acuracy.append(acL2_St)
+    misMetodos.append(L2_St)
+
+    ##Clasificador_RL_ML_Batch
+    ML_Bach = Clasificador_RL_ML_Batch(clases)
+    a,e = ML_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    acML_Bach = rendimiento(ML_Bach,validacion,clases_validacion)
+    metodo.append("Clasificador_RL_ML_Batch:")
+    acuracy.append(acML_Bach)
+    misMetodos.append(ML_Bach)
+
+    ##Clasificador_RL_ML_St
+    ML_St = Clasificador_RL_ML_St(clases)
+    a,e = ML_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    acML_St = rendimiento(ML_St,validacion,clases_validacion)
+    metodo.append("Clasificador_RL_ML_St:")
+    acuracy.append(acML_St)
+    misMetodos.append(ML_St)
+
+    ##one vs rest L2_Bach
+    one_restL2 = Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
+    one_restL2.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    acOneRestL2 = rendimiento(one_restL2,validacion,clases_validacion)
+    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    acuracy.append(acOneRestL2)
+    misMetodos.append(one_restL2)
+
+    print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
+    "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
+
+    for i in range(len(metodo)):
+        print(metodo[i],acuracy[i])
+
+    mejor = max(acuracy)
+    indice = acuracy.index(mejor)
+
+    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice])
+
+    return misMetodos[indice]
+
+def clasificaMejor(m):
+    print(m)
+    print("validacion: ",rendimiento(m,votos_valid,votos_valid_clas))
+    print(rendimiento(m,votos_test,votos_test_clas))
+
+######################################################################################################### primera prueba
+
+# In [83]: mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  50
+#  rate_decay =  True
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# Perceptron: 0.9710144927536232
+# Clasificador_RL_L2_Batch: 0.9565217391304348
+# Clasificador_RL_L2_St: 0.9855072463768116
+# Clasificador_RL_ML_Batch: 0.9565217391304348
+# Clasificador_RL_ML_St: 0.9855072463768116
+
+# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116
+
+######################################################################################################### otra prueba con los mismos parametros:
+
+# In [84]: mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  50
+#  rate_decay =  True
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# Perceptron: 0.9855072463768116
+# Clasificador_RL_L2_Batch: 0.9420289855072463
+# Clasificador_RL_L2_St: 0.9855072463768116
+# Clasificador_RL_ML_Batch: 0.9710144927536232
+# Clasificador_RL_ML_St: 0.9710144927536232
+
+
+
+# Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
+
+######################################################################################################### otros parametros
+# In [96]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# Perceptron: 0.9565217391304348
+# Clasificador_RL_L2_Batch: 0.7971014492753623
+# Clasificador_RL_L2_St: 0.927536231884058
+# Clasificador_RL_ML_Batch: 1.0
+# Clasificador_RL_ML_St: 0.9565217391304348
+
+# Por lo que el mejor seria el Clasificador_RL_ML_Batch: con una acuracy de 1.0
+
+# In [97]: m.pesos
+# Out[97]:
+# [0.4229950881833548,
+#  0.27317538844627465,
+#  0.711027952150914,
+#  0.6994496767958582,
+#  -2.5717907044593353,
+#  -0.7196720449497429,
+#  0.1325039118550952,
+#  -0.9303798825074252,
+#  -0.1931287690701619,
+#  0.9872705683149539,
+#  -0.3206004413092406,
+#  0.18064387353039402,
+#  -0.050354214937230454,
+#  -0.5078123758537897,
+#  0.1271250545684751,
+#  -0.21250584478649107,
+#  0.443988026989932]
+
+# In [98]: clasificaMejor(m)
+# <__main__.Clasificador_RL_ML_Batch object at 0x0000029BD2F40400>
+# validacion:  1.0
+# 0.896551724137931
+
+######################################################################################################### otros parametros
+
+# In [122]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  True
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# Perceptron: 0.9855072463768116
+# Clasificador_RL_L2_Batch: 0.9565217391304348
+# Clasificador_RL_L2_St: 0.9855072463768116
+# Clasificador_RL_ML_Batch: 0.9565217391304348
+# Clasificador_RL_ML_St: 0.9565217391304348
+
+# Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
+
+# In [123]: m.pesos
+# Out[123]:
+# [3.4671723097946203,
+#  0.7464109670914848,
+#  3.276934471391926,
+#  5.901662769684045,
+#  -16.477172309794625,
+#  2.242677540873024,
+#  5.709891103246117,
+#  -6.591827690205382,
+#  1.753322459126976,
+#  5.204156721980204,
+#  -2.2466775408730255,
+#  3.8496627696840537,
+#  -4.13029305517104,
+#  4.6298718653502915,
+#  -2.6870794927979476,
+#  3.252777422460347,
+#  2.5885619234229367]
+
+# In [124]: clasificaMejor(m)
+# <__main__.Clasificador_Perceptron object at 0x0000029BD2FF74A8>
+# validacion:  0.9855072463768116
+# 0.931034482758620
+
+entrenaFichero = []
+
+def leerEntrena():
+    with open('digitdata/trainingimages','r') as fichero:
+        total = []
+        w = []
+        i=0
+        for linea in fichero:
+            i+=1
+            for posicion in linea[:-1]:
+                if " " == posicion:
+                    w.append(0)
+                else:
+                    w.append(1)
+            if(i==28):
+                i=0
+                total.append(w)
+                w = []
+        fichero.closed
+    return total
+entrenaFichero = leerEntrena()
+
+clasesEntrenaFichero = []
+def leerClasesEntrena():
+    v = []
+    with open('digitdata/traininglabels','r') as fichero:
+        for linea in fichero:
+            v.append(int(linea[0]))
+        fichero.closed
+    return v
+clasesEntrenaFichero = leerClasesEntrena()
+
+####
+
+validaFichero = []
+def leerValida():
+    with open('digitdata/validationimages','r') as fichero:
+        total = []
+        w = []
+        i=0
+        for linea in fichero:
+            i+=1
+            for posicion in linea[:-1]:
+                if " " == posicion:
+                    w.append(0)
+                else:
+                    w.append(1)
+            if(i==28):
+                i=0
+                total.append(w)
+                w = []
+        fichero.closed
+    return total
+validaFichero = leerValida()
+
+clasesValidaFichero = []
+def leerClasesValida():
+    v = []
+    with open('digitdata/validationlabels','r') as fichero:
+        for linea in fichero:
+            v.append(int(linea[0]))
+        fichero.closed
+    return v
+clasesValidaFichero = leerClasesValida()
+
+######
+
+
+
+testFichero = []
+def leerTest():
+    with open('digitdata/testimages','r') as fichero:
+        total = []
+        w = []
+        i=0
+        for linea in fichero:
+            i+=1
+            for posicion in linea[:-1]:
+                if " " == posicion:
+                    w.append(0)
+                else:
+                    w.append(1)
+            if(i==28):
+                i=0
+                total.append(w)
+                w = []
+        fichero.closed
+    return total
+testFichero = leerTest()
+
+clasesTestFichero = []
+def leerClasesTest():
+    v = []
+    with open('digitdata/testlabels','r') as fichero:
+        for linea in fichero:
+            v.append(int(linea[0]))
+        fichero.closed
+    return v
+clasesTestFichero = leerClasesTest()
+
+########
+
+clasesFichero = []
+def clasesParaFichero():
+    res = []
+    for i in clasesEntrenaFichero:
+        if not i in res:
+            res.append(i)
+    return res
+clasesFichero = clasesParaFichero()
+
+######
+
+def pruebaDigit2o():
+    
+    epoch = 2
+    decay=False
+    valor=0.001
+
+    misMetodos = []
+    metodo = []
+    acuracy = []
+    
+    ##one vs rest L2_Bach
+    one_restL2 = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
+    one_restL2.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
+    print("yuju")
+    acOneRestL2 = rendimiento(one_restL2,entrenaFichero,clasesEntrenaFichero)
+    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    acuracy.append(acOneRestL2)
+    misMetodos.append(one_restL2)
+
+    ##one vs rest L2_St
+    # one_restL2St = Clasificador_RL_OvR(Clasificador_RL_L2_St,clasesFichero)
+    # one_restL2St.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
+    # acOneRestL2St = rendimiento(one_restL2St,entrenaFichero,clasesEntrenaFichero)
+    # metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    # acuracy.append(acOneRestL2St)
+    # misMetodos.append(one_restL2St)
+
+    print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
+    "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
+
+    for i in range(len(metodo)):
+        print(metodo[i],acuracy[i])
+
+    mejor = max(acuracy)
+    indice = acuracy.index(mejor)
+
+    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice])
+
+    return misMetodos[indice]
+
+# with open('digitdata/traininglabels','r') as fichero:
+#     v = [int(l) for l in fichero]
