@@ -1603,26 +1603,26 @@ clasesFichero = clasesParaFichero()
 def prueba_Digitos():
 
     epoch = 100
-    decay=False
-    valor=0.01
+    decay=True
+    valor=0.001
 
     misClasificadores = []
     metodo = []
     acuracy = []
 
-    ##one vs rest ML_ST
+    ##one vs rest ML_BATCH
     one_restL2 = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
     one_restL2.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
     acOneRestL2 = rendimiento(one_restL2,entrenaFichero,clasesEntrenaFichero)
-    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    metodo.append("One vs Rest con Clasificador_RL_ML_Batch:")
     acuracy.append(acOneRestL2)
     misClasificadores.append(one_restL2)
 
-    ##one vs rest ML_BATCH
+    ##one vs rest ML_ST
     one_restMLST = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
     one_restMLST.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
     acOneRestMLST = rendimiento(one_restMLST,entrenaFichero,clasesEntrenaFichero)
-    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    metodo.append("One vs Rest con Clasificador_RL_ML_St:")
     acuracy.append(acOneRestMLST)
     misClasificadores.append(one_restMLST)
 
@@ -1639,6 +1639,30 @@ def prueba_Digitos():
 
     return misClasificadores[indice]
 
+# In [2]: prueba_Digitos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.01
+#  la tasa de aciertos serian:
+
+# One vs Rest con Clasificador_RL_ML_Batch: 0.983
+# One vs Rest con Clasificador_RL_ML_St: 0.9848
+
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_L2_Batch: con una acuracy de 0.9848
+# Out[2]: <__main__.Clasificador_RL_OvR at 0x1ef10c92518>
+
+# In [6]: m = prueba_Digitos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  True
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# One vs Rest con Clasificador_RL_ML_Batch: 0.9658
+# One vs Rest con Clasificador_RL_ML_St: 0.966
+
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_L2_Batch: con una acuracy de 0.966
 #----------------------------------------------
 
 #----------------------------------------------
@@ -1650,6 +1674,11 @@ def prueba_Digitos():
 #    también es posible transformar atributos no numéricos en numéricos usando
 #    la técnica conocida como "one hot encoding".
 
+def guardarPeso(clasificador):
+    with open('pesosDigitos','w') as fichero:
+        fichero.write("pesos = {0}".format(clasificador.pesosPorClases))
+    fichero.closed
+    
 def crearDataSetUCI():
     with open('wine/wine-data.txt','r') as fichero:
         entr = []
