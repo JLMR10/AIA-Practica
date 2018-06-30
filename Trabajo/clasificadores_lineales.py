@@ -1,5 +1,5 @@
 # ==========================================================
-# Ampliación de Inteligencia Artificial. Tercer curso. 
+# Ampliación de Inteligencia Artificial. Tercer curso.
 # Grado en Ingeniería Informática - Tecnologías Informáticas
 # Curso 2017-18
 # Trabajo práctico
@@ -24,21 +24,21 @@ import random, copy, numpy, math
 # información de carácter general con los compañeros se permite (e incluso se
 # recomienda), pero NO AL NIVEL DE CÓDIGO. Igualmente el remitir código de
 # terceros, OBTENIDO A TRAVÉS DE LA RED o cualquier otro medio, se considerará
-# plagio. 
+# plagio.
 
 # Cualquier plagio o compartición de código que se detecte significará
 # automáticamente la calificación de CERO EN LA ASIGNATURA para TODOS los
 # alumnos involucrados. Por tanto a estos alumnos NO se les conservará, para
 # futuras convocatorias, ninguna nota que hubiesen obtenido hasta el
 # momento. SIN PERJUICIO DE OTRAS MEDIDAS DE CARÁCTER DISCIPLINARIO QUE SE
-# PUDIERAN TOMAR.  
+# PUDIERAN TOMAR.
 # *****************************************************************************
 
 
 # IMPORTANTE: NO CAMBIAR EL NOMBRE NI A ESTE ARCHIVO NI A LAS CLASES Y MÉTODOS
 # QUE SE PIDEN
 
-# NOTA: En este trabajo no se permite usar scikit-learn, pero sí numpy o scipy. 
+# NOTA: En este trabajo no se permite usar scikit-learn, pero sí numpy o scipy.
 
 # ====================================================
 # PARTE I: MODELOS LINEALES PARA CLASIFICACIÓN BINARIA
@@ -61,11 +61,11 @@ import random, copy, numpy, math
 # --------------------------------------------
 
 # Previamente a la implementación de los clasificadores, conviene tener
-# funciones que generen aleatoriamente conjuntos de datos fictícios. 
+# funciones que generen aleatoriamente conjuntos de datos fictícios.
 # En concreto, se pide implementar estas dos funciones:
 
 # X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
-# * Función genera_conjunto_de_datos_l_s(rango,dim,n_datos): 
+# * Función genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 def genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 
     def clasificacion(hiperplano,x):
@@ -77,7 +77,7 @@ def genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 
     hiperplano = [random.randint(-rango,rango) for x in range(dim+1)]
 
-    X = [[random.randint(-rango,rango) for x in range(dim)] for x in range(n_datos)] 
+    X = [[random.randint(-rango,rango) for x in range(dim)] for x in range(n_datos)]
 
     Y = [clasificacion(hiperplano,x) for x in X]
 
@@ -106,7 +106,7 @@ def genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 #   Como la anterior, pero el conjunto de datos debe ser no linealmente
 #   separable. Para ello generar el conjunto de datos con la función anterior
 #   y cambiar de clase a una proporción pequeña del total de ejemplos (por
-#   ejemplo el 10%). La proporción se da con prop_n_l_s. 
+#   ejemplo el 10%). La proporción se da con prop_n_l_s.
 
 # X2,Y2=genera_conjunto_de_datos_n_l_s(4,8,400,0.1)
 def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
@@ -117,7 +117,7 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 
     for x in range(cantidadCambio):
         Y[randomizado[x]] = 1-Y[randomizado[x]]
-    
+
     return X,Y
 
 
@@ -154,23 +154,23 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 # * NOMBRE_DEL_CLASIFICADOR:
 # --------------------------
 
-#  Este es el nombre de la clase que implementa el clasificador. 
+#  Este es el nombre de la clase que implementa el clasificador.
 #  Obligatoriamente se han de usar cada uno de los siguientes
 #  nombres:
 
-#  - Perceptrón umbral: 
+#  - Perceptrón umbral:
 #                       Clasificador_Perceptron
 
-#  - Regresión logística, minimizando L2, batch: 
+#  - Regresión logística, minimizando L2, batch:
 #                       Clasificador_RL_L2_Batch
 
-#  - Regresión logística, minimizando L2, estocástico: 
+#  - Regresión logística, minimizando L2, estocástico:
 #                       Clasificador_RL_L2_St
 
-#  - Regresión logística, maximizando verosimilitud, batch: 
+#  - Regresión logística, maximizando verosimilitud, batch:
 #                       Clasificador_RL_ML_Batch
 
-#  - Regresión logística, maximizando verosimilitud, estocástico: 
+#  - Regresión logística, maximizando verosimilitud, estocástico:
 #                       Clasificador_RL_ML_St
 
 # * Constructor de la clase:
@@ -179,8 +179,8 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 #  El constructor debe tener los siguientes argumentos de entrada:
 
 #  - Una lista clases con los nombres de las clases del problema de
-#    clasificación, tal y como aparecen en el conjunto de datos. 
-#    Por ejemplo, en el caso del problema de las votaciones, 
+#    clasificación, tal y como aparecen en el conjunto de datos.
+#    Por ejemplo, en el caso del problema de las votaciones,
 #    esta lista sería ["republicano","democrata"]
 
 #  - El parámetro normalizacion, que puede ser True o False (False por
@@ -200,41 +200,41 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 # * Método entrena:
 # -----------------
 
-#  Este método es el que realiza el entrenamiento del clasificador. 
+#  Este método es el que realiza el entrenamiento del clasificador.
 #  Debe calcular un conjunto de pesos, mediante el correspondiente
 #  algoritmo de entrenamiento. Describimos a continuación los parámetros de
-#  entrada:  
+#  entrada:
 
 #  - entr y clas_entr, son los datos del conjunto de entrenamiento y su
 #    clasificación, respectivamente. El primero es una lista con los ejemplos,
 #    y el segundo una lista con las clasificaciones de esos ejemplos, en el
-#    mismo orden. 
+#    mismo orden.
 
 #  - n_epochs: número de veces que se itera sobre todo el conjunto de
 #    entrenamiento.
 
 #  - rate: si rate_decay es False, rate es la tasa de aprendizaje fija usada
 #    durante todo el aprendizaje. Si rate_decay es True, rate marca una cota
-#    mínima de la tasa de aprendizaje, como se explica a continuación. 
+#    mínima de la tasa de aprendizaje, como se explica a continuación.
 
 #  - rate_decay, indica si la tasa de aprendizaje debe disminuir a medida que
 #    se van realizando actualizaciones de los pases. En concreto, si
 #    rate_decay es True, la tasa de aprendizaje que se usa en cada
 #    actualización se debe de calcular con la siguiente fórmula:
-#       rate_n= rate_0 + (2/n**(1.5)) 
+#       rate_n= rate_0 + (2/n**(1.5))
 #    donde n es el número de actualizaciones de pesos realizadas hasta el
 #    momento, y rate_0 es la cantidad introducida en el parámetro rate
-#    anterior.   
+#    anterior.
 #
 #  - pesos_iniciales: si es None, se indica que los pesos deben iniciarse
 #    aleatoriamente (por ejemplo, valores aleatorios entre -1 y 1). Si no es
 #    None, entonces se debe proporcionar la lista de pesos iniciales. Esto
 #    puede ser útil para continuar el aprendizaje a partir de un aprendizaje
-#    anterior, si por ejemplo se dispone de nuevos datos.    
+#    anterior, si por ejemplo se dispone de nuevos datos.
 
 #  NOTA: En las versiones estocásticas, y en el perceptrón umbral, en cada
 #  epoch recorrer todos los ejemplos del conjunto de entrenamiento en un orden
-#  aleatorio distinto cada vez.  
+#  aleatorio distinto cada vez.
 
 # * Método clasifica_prob:
 # ------------------------
@@ -242,30 +242,30 @@ def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
 #  El método que devuelve la probabilidad de pertenecer a la clase (la que se
 #  ha tomado como clase 1), calculada para un nuevo ejemplo. Este método no es
 #  necesario incluirlo para el perceptrón umbral.
-        
+
 # * Método clasifica:
 # -------------------
-    
+
 #  El método que devuelve la clase que se predice para un nuevo ejemplo. La
 #  clase debe ser una de las clases del problema (por ejemplo, "republicano" o
-#  "democrata" en el problema de los votos).  
+#  "democrata" en el problema de los votos).
 
 
 # Si el clasificador aún no ha sido entrenado, tanto "clasifica" como
 # "clasifica_prob" deben devolver una excepción del siguiente tipo:
 
-class ClasificadorNoEntrenado(Exception): 
+class ClasificadorNoEntrenado(Exception):
      def __init__(self,tipo):
         Exception.__init__(self,"Clasificador {0} no entrenado".format(tipo))
 
 #  NOTA: Se aconseja probar el funcionamiento de los clasificadores con
-#  conjuntos de datos generados por las funciones del apartado anterior. 
+#  conjuntos de datos generados por las funciones del apartado anterior.
 
 # Ejemplo de uso:
 
 # ------------------------------------------------------------
 
-# Generamos un conjunto de datos linealmente separables, 
+# Generamos un conjunto de datos linealmente separables,
 # In [1]: X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
 
 # Lo partimos en dos trozos:
@@ -273,7 +273,7 @@ class ClasificadorNoEntrenado(Exception):
 
 # In [3]: X1t,Y1t=X1[300:],Y1[300:]
 
-# Creamos el clasificador (perceptrón umbral en este caso): 
+# Creamos el clasificador (perceptrón umbral en este caso):
 # In [4]: clas_pb1=Clasificador_Perceptron([0,1])
 
 # Lo entrenamos con elprimero de los conjuntos de datos:
@@ -288,7 +288,7 @@ class ClasificadorNoEntrenado(Exception):
 # Out[7]: 1.0
 
 # Repetimos el experimento, pero ahora con un conjunto de datos que no es
-# linealmente separable: 
+# linealmente separable:
 # In [8]: X2,Y2,w2=genera_conjunto_de_datos_n_l_s(4,8,400,0.1)
 
 # In [8]: X2e,Y2e=X2[:300],Y2[:300]
@@ -375,10 +375,10 @@ class Clasificador_Perceptron():
         vector_accuracy = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
+                rate_n = rate + (2/n**(1.5))
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
-            
+
             for j in randomizado:
                 umbral = sum(self.pesos[i]*entr[j][i] for i in range(len(entr[j])))
                 o = f_umbral(umbral)
@@ -386,7 +386,7 @@ class Clasificador_Perceptron():
 
             vector_accuracy.append(sum(self.clasifica(x) == y for x,y in zip(entr_aux,clas_entr))/len(clas_entr))
 
-        return vector_accuracy  
+        return vector_accuracy
 
 
     def clasifica_prob(self,ej):
@@ -403,11 +403,11 @@ class Clasificador_Perceptron():
             umbral = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
             o = f_umbral(umbral)
             return self.clasesP[o]
-        
+
 
 ##################################################################################
 
-## Clasificador de Regresion Lineal Bach  minimizando L2 
+## Clasificador de Regresion Lineal Bach  minimizando L2
 
 class Clasificador_RL_L2_Batch:
 
@@ -425,7 +425,7 @@ class Clasificador_RL_L2_Batch:
 
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-        
+
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
@@ -433,7 +433,7 @@ class Clasificador_RL_L2_Batch:
         vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
+                rate_n = rate + (2/n**(1.5))
             error = 0
             Delta_w = [0]*len(self.pesos)
             for x,y in zip(entr,clas_entr):
@@ -456,7 +456,7 @@ class Clasificador_RL_L2_Batch:
             ej = [1]+ej
             x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
             return f_sigmoide(x)
-    
+
     def clasifica(self,ej):
         if not self.pesos:
             raise ClasificadorNoEntrenado("regresión lineal L2 batch")
@@ -494,7 +494,7 @@ class Clasificador_RL_L2_St:
         vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
+                rate_n = rate + (2/n**(1.5))
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
             error = 0
@@ -518,7 +518,7 @@ class Clasificador_RL_L2_St:
             ej = [1]+ej
             x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
             return f_sigmoide(x)
-        
+
     def clasifica(self,ej):
         if not self.pesos:
             raise ClasificadorNoEntrenado("regresión lineal L2 estocástico")
@@ -548,7 +548,7 @@ class Clasificador_RL_ML_Batch:
         clas_entr = convertidor(self.clasesP,clas_entr)
         if not pesos_iniciales:
             pesos_iniciales = [random.randint(-1,1) for x in range(len(entr[0]))]
-        
+
         self.pesos = copy.copy(pesos_iniciales)
 
         rate_n = rate
@@ -556,7 +556,7 @@ class Clasificador_RL_ML_Batch:
         vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
+                rate_n = rate + (2/n**(1.5))
             error = 0
             Delta_w = [0]*len(self.pesos)
             for x,y in zip(entr,clas_entr):
@@ -588,7 +588,7 @@ class Clasificador_RL_ML_Batch:
             ej = [1]+ej
             x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
             return f_sigmoide(x)
-    
+
     def clasifica(self,ej):
         if not self.pesos:
             raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud batch")
@@ -601,7 +601,7 @@ class Clasificador_RL_ML_Batch:
 
 ##################################################################################
 
-##Clasificador Regresion Lineal St maximizando verosimilitud 
+##Clasificador Regresion Lineal St maximizando verosimilitud
 
 class Clasificador_RL_ML_St:
 
@@ -626,7 +626,7 @@ class Clasificador_RL_ML_St:
         vector_error = []
         for n in range(n_epochs):
             if not n == 0 and rate_decay:
-                rate_n = rate + (2/n**(1.5)) 
+                rate_n = rate + (2/n**(1.5))
             randomizado = list(range(len(entr)))
             random.shuffle(randomizado)
             error = 0
@@ -658,7 +658,7 @@ class Clasificador_RL_ML_St:
             ej = [1]+ej
             x = sum(self.pesos[i]*ej[i] for i in range(len(ej)))
             return f_sigmoide(x)
-    
+
     def clasifica(self,ej):
         if not self.pesos:
             raise ClasificadorNoEntrenado("regresión lineal maximizando verosimilitud estocástico")
@@ -670,90 +670,6 @@ class Clasificador_RL_ML_St:
             return self.clasesP[round(prob)]
 
 ##################################################################################
-
-##################################################################################
-
-##Pruebas Clasificadores
-
-def prueba(mostrar=False):
-    #Perceptron
-    X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
-    X1e,Y1e=X1[:300],Y1[:300]
-    X1t,Y1t=X1[300:],Y1[300:]
-
-    #Regresion Lineal Bach minimizando L2
-    clas_pb1=Clasificador_Perceptron([0,1])
-    ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
-        plt.plot(range(1,len(ac)+1),ac,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Porcentaje de acierto')
-        plt.show()
-    # plt.plot(range(1,len(errores)+1),errores,marker='o')
-# plt.xlabel('Epochs')
-# plt.ylabel('Error')
-# plt.show()
-    #Regresion Lineal St minimizando L2
-    clas_pb2=Clasificador_RL_L2_Batch([0,1])
-    ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    ##print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
-    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
-        plt.plot(range(1,len(ac2)+1),ac2,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Porcentaje de acierto')
-        plt.show()
-        plt.plot(range(1,len(error2)+1),error2,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Error Cuadrático')
-        plt.show()
-    #Regresion Lineal Bach maximizando verosimilitud
-    clas_pb3=Clasificador_RL_L2_St([0,1])
-    ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    ##print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
-    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
-        plt.plot(range(1,len(ac3)+1),ac3,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Porcentaje de acierto')
-        plt.show()
-        plt.plot(range(1,len(error3)+1),error3,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Error Cuadrático')
-        plt.show()
-    #Regresion Lineal St maximizando verosimilitud
-    clas_pb4=Clasificador_RL_ML_Batch([0,1])
-    ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    ##print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
-    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
-        plt.plot(range(1,len(ac4)+1),ac4,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Porcentaje de acierto')
-        plt.show()
-        plt.plot(range(1,len(error4)+1),error4,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Log verosimilitud')
-        plt.show()
-    clas_pb5=Clasificador_RL_ML_St([0,1])
-    ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    ##print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
-    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
-    if(False):
-        plt.plot(range(1,len(ac5)+1),ac5,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Porcentaje de acierto')
-        plt.show()
-        plt.plot(range(1,len(error5)+1),error5,marker='o')
-        plt.xlabel('Epochs')
-        plt.ylabel('Log Verosimilitud')
-        plt.show()
-
-##################################################################################
-
-##################################################################################
-
 # --------------------------
 # I.3. Curvas de aprendizaje
 # --------------------------
@@ -761,23 +677,23 @@ def prueba(mostrar=False):
 # Se pide mostrar mediante gráficas la evolución del aprendizaje de los
 # distintos algoritmos. En concreto, para cada clasificador usado con un
 # conjunto de datos generado aleatoriamente con las funciones anteriores, las
-# dos siguientes gráficas: 
+# dos siguientes gráficas:
 
 # - Una gráfica que indique cómo evoluciona el porcentaje de errores que
-#   comete el clasificador sobre el conjunto de entrenamiento, en cada epoch.    
+#   comete el clasificador sobre el conjunto de entrenamiento, en cada epoch.
 # - Otra gráfica que indique cómo evoluciona el error cuadrático o la log
 #   verosimilitud del clasificador (dependiendo de lo que se esté optimizando
 #   en cada proceso de entrenamiento), en cada epoch.
 
 # Para realizar gráficas, se recomiendo usar la biblioteca matplotlib de
-# python: 
+# python:
 
 import matplotlib.pyplot as plt
 
 
-# Lo que sigue es un ejemplo de uso, para realizar una gráfica sencilla a 
+# Lo que sigue es un ejemplo de uso, para realizar una gráfica sencilla a
 # partir de una lista "errores", que por ejemplo podría contener los sucesivos
-# porcentajes de error que comete el clasificador, en los sucesivos epochs: 
+# porcentajes de error que comete el clasificador, en los sucesivos epochs:
 
 
 # plt.plot(range(1,len(errores)+1),errores,marker='o')
@@ -791,7 +707,7 @@ import matplotlib.pyplot as plt
 # Se pide generar una serie de gráficas que permitan explicar el
 # comportamiento de los algoritmos, con las distintas opciones, y con
 # conjuntos separables y no separables. Comentar la interpretación de las
-# distintas gráficas obtenidas. 
+# distintas gráficas obtenidas.
 
 # NOTA: Para poder realizar las gráficas, debemos modificar los
 # algoritmos de entrenamiento para que ademas de realizar el cálculo de los
@@ -801,21 +717,13 @@ import matplotlib.pyplot as plt
 # puede quitarse una vez se realize este apartado.
 
 
-
-
-
-
-
-
-
-
 # ==================================
 # PARTE II: CLASIFICACIÓN MULTICLASE
 # ==================================
 
 # Se pide implementar algoritmos de regresión logística para problemas de
 # clasificación en los que hay más de dos clases. Para ello, usar las dos
-# siguientes aproximaciones: 
+# siguientes aproximaciones:
 
 # ------------------------------------------------
 # II.1 Técnica "One vs Rest" (Uno frente al Resto)
@@ -828,11 +736,11 @@ import matplotlib.pyplot as plt
 #  clase, frente al resto. Este conjunto de clasificadores binarios se usa
 #  para dar la clasificación de un ejemplo nuevo, sin más que devolver la
 #  clase para la que su correspondiente clasificador binario da una mayor
-#  probabilidad. 
+#  probabilidad.
 
 #  En concreto, se pide implementar una clase python Clasificador_RL_OvR con
 #  la siguiente estructura, y que implemente el entrenamiento y la
-#  clasificación como se ha explicado. 
+#  clasificación como se ha explicado.
 
 # class Clasificador_RL_OvR():
 
@@ -845,13 +753,13 @@ import matplotlib.pyplot as plt
 
 #     def clasifica(self,ej):
 
-#        .....            
+#        .....
 
 #  Excepto "class_clasif", los restantes parámetros de los métodos significan
 #  lo mismo que en el apartado anterior, excepto que ahora "clases" puede ser
 #  una lista con más de dos elementos. El parámetro class_clasif es el nombre
 #  de la clase que implementa el clasificador binario a partir del cual se
-#  forma el clasificador multiclase.   
+#  forma el clasificador multiclase.
 
 #  Un ejemplo de sesión, con el problema del iris:
 
@@ -863,7 +771,7 @@ import matplotlib.pyplot as plt
 # Creamos el clasificador, a partir de RL binaria estocástico:
 # In [30]: clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_ML_St,iris_clases)
 
-# Lo entrenamos: 
+# Lo entrenamos:
 # In [32]: clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
 
 # Clasificamos un par de ejemplos, comparándolo con su clase real:
@@ -873,6 +781,7 @@ import matplotlib.pyplot as plt
 # In [34]: clas_rlml1.clasifica(iris_entr[78]),iris_entr_clas[78]
 # Out[34]: ('Iris-versicolor', 'Iris-versicolor')
 # ----------------------------------------------------------------
+
 
 class Clasificador_RL_OvR():
 
@@ -901,9 +810,8 @@ class Clasificador_RL_OvR():
             return self.clasesC[x.index(max(x))]
 
 
-
 # ------------------------------------------------
-# II.1 Regresión logística con softmax 
+# II.1 Regresión logística con softmax
 # ------------------------------------------------
 
 
@@ -911,29 +819,30 @@ class Clasificador_RL_OvR():
 #  regresión multinomial logística mdiante softmax, tal y como se describe en
 #  el tema 5, pero solo la versión ESTOCÁSTICA.
 
-#  En concreto, se pide implementar una clase python Clasificador_RL_Softmax 
-#  con la siguiente estructura, y que implemente el entrenamiento y la 
+#  En concreto, se pide implementar una clase python Clasificador_RL_Softmax
+#  con la siguiente estructura, y que implemente el entrenamiento y la
 #  clasificación como se explica en el tema 5:
 
 # class Clasificador_RL_Softmax():
 
 #     def __init__(self,clases):
-
 #        .....
-#     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
 
+#     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
 #        .....
 
 #     def clasifica(self,ej):
+#        .....
 
-#        .....            
+# ----------------------------------------------------------------
+
 
 class Clasificador_RL_Softmax():
 
     def __init__(self,clases):
         self.clasesC=clases
         self.pesos = []
-    
+
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
             def formula_o(clase,j,pesos):
                 numerador = math.exp(sum(pesos[clase][i]*entr[j][i] for i in range(len(entr[j]))))
@@ -946,7 +855,7 @@ class Clasificador_RL_Softmax():
 
             for n in range(n_epochs):
                 if not n == 0 and rate_decay:
-                    rate_n = rate + (2/n**(1.5)) 
+                    rate_n = rate + (2/n**(1.5))
                 randomizado = list(range(len(entr)))
                 random.shuffle(randomizado)
                 for j in randomizado:
@@ -957,7 +866,7 @@ class Clasificador_RL_Softmax():
                             if clas_entr[j]==self.clasesC[m]:
                                 y = 1
                             self.pesos[m][i]+= rate_n*(y-formula_o(m,j,pesosAux))*entr[j][i]
-                             
+
 
     def clasifica(self,ej):
         if not self.pesos:
@@ -975,8 +884,6 @@ class Clasificador_RL_Softmax():
                 vector_prob[m] = formula_o(m)
 
             return self.clasesC[vector_prob.index(max(vector_prob))]
-            
-
 
 
 # ===========================================
@@ -985,7 +892,7 @@ class Clasificador_RL_Softmax():
 
 # En este apartado se pide aplicar alguno de los clasificadores implementados
 # en el apartado anterior,para tratar de resolver tres problemas: el de los
-# votos, el de los dígitos y un tercer problema que hay que buscar. 
+# votos, el de los dígitos y un tercer problema que hay que buscar.
 
 # -------------------------------------
 # III.1 Implementación del rendimiento
@@ -996,9 +903,9 @@ class Clasificador_RL_Softmax():
 # mediante el porcentaje de ejemplos clasificados correctamente. Se ide
 # definir una función rendimiento(clf,X,Y) que calcula el rendimiento de
 # clasificador concreto clf, sobre un conjunto de datos X cuya clasificación
-# conocida viene dada por la lista Y. 
+# conocida viene dada por la lista Y.
 # NOTA: clf es un objeto de las clases definidas en
-# los apartados anteriores, que además debe estar ya entrenado. 
+# los apartados anteriores, que además debe estar ya entrenado.
 
 from iris import *
 
@@ -1011,241 +918,331 @@ from iris import *
 def rendimiento(clasificador,entr,clas_entr):
     return sum(clasificador.clasifica(x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
 
-def prueba2():
-    iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
-    clas_rlml1=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,iris_clases)
-    clas_rlml1.entrena(iris_entr,iris_entr_clas,50,rate_decay=True,rate=0.01)
-    print(clas_rlml1.pesosPorClases)
-    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+###=================================================================================================
+##TESTS
+###=================================================================================================
 
-# [[0.05965364350603899, -0.3999226669517125, 0.44379163992616366, -5.382308278710903, -1.2374188836446136], [0.4077538960081543, -3.035385503816289, -0.8322122352029325, -0.2664800649634288, -1.3061853383455444], [-16.594108820995217, -91.32745582862998, -49.066130518434264, -62.081040815856916, -22.709358145328252]]
-# 0.6666666666666666
+#----------------------------------------------
+###Pruebas Basicas Clasificadores###
 
-def prueba3():
-    iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
-    clas_rlml1=Clasificador_RL_Softmax(iris_clases)
-    clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
-    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+def pruebaSeparableConGraficas():
 
-def pruebaE():
     X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
+    X1e,Y1e=X1[:300],Y1[:300]
     X1t,Y1t=X1[300:],Y1[300:]
 
-    #Regresion Lineal Bach minimizando L2
+    #Perceptron
+    print("Perceptron")
     clas_pb1=Clasificador_Perceptron([0,1])
-    clas_pb1.clasifica(X1t[0]),Y1t[0]
-# ----------------------------------
-# III.2 Aplicando los clasificadores
-# ----------------------------------
+    ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac)+1),ac,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
 
-#  Obtener un clasificador para cada uno de los siguientes problemas,
-#  intentando que el rendimiento obtenido sobre un conjunto independiente de
-#  ejemplos de prueba sea lo mejor posible. 
+    #Regresion Lineal Bach minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_Batch")
+    clas_pb2=Clasificador_RL_L2_Batch([0,1])
+    ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac2)+1),ac2,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error2)+1),error2,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error Cuadrático')
+    plt.show()
 
-#  - Predecir el partido de un congresista en función de lo que ha votado en
-#    las sucesivas votaciones, a partir de los datos en el archivo votos.py que
-#    se suministra.  
+    #Regresion Lineal St minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_St")
+    clas_pb3=Clasificador_RL_L2_St([0,1])
+    ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac3)+1),ac3,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error3)+1),error3,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error Cuadrático')
+    plt.show()
 
-#  - Predecir el dígito que se ha escrito a mano y que se dispone en forma de
-#    imagen pixelada, a partir de los datos que están en el archivo digidata.zip
-#    que se suministra.  Cada imagen viene dada por 28x28 píxeles, y cada pixel
-#    vendrá representado por un caracter "espacio en blanco" (pixel blanco) o
-#    los caracteres "+" (borde del dígito) o "#" (interior del dígito). En
-#    nuestro caso trataremos ambos como un pixel negro (es decir, no
-#    distinguiremos entre el borde y el interior). En cada conjunto las imágenes
-#    vienen todas seguidas en un fichero de texto, y las clasificaciones de cada
-#    imagen (es decir, el número que representan) vienen en un fichero aparte,
-#    en el mismo orden. Será necesario, por tanto, definir funciones python que
-#    lean esos ficheros y obtengan los datos en el mismo formato python en el
-#    que los necesitan los algoritmos.
+    #Regresion Lineal Bach maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_Batch")
+    clas_pb4=Clasificador_RL_ML_Batch([0,1])
+    ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac4)+1),ac4,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error4)+1),error4,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Log verosimilitud')
+    plt.show()
 
-def leer():
-    with open('digitdata/trainingimages','r') as fichero:
-        total = []
-        v = []
-        i=0
-        for linea in fichero:
-            w = []
-            i+=1
-            for posicion in linea[:-1]:
-                if " " == posicion:
-                    w.append(0)
-                else:
-                    w.append(1)
-            v.append(w)
-            if(i==28):
-                i=0
-                total.append(v)
-                v = []
-        fichero.closed
-    return total
 
-#  - Cualquier otro problema de clasificación (por ejemplo,
-#    alguno de los que se pueden encontrar en UCI Machine Learning repository,
-#    http://archive.ics.uci.edu/ml/). Téngase en cuenta que el conjunto de
-#    datos que se use ha de tener sus atríbutos numéricos. Sin embargo,
-#    también es posible transformar atributos no numéricos en numéricos usando
-#    la técnica conocida como "one hot encoding".   
+    #Regresion Lineal St maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_St")
+    clas_pb5=Clasificador_RL_ML_St([0,1])
+    ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac5)+1),ac5,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error5)+1),error5,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Log Verosimilitud')
+    plt.show()
 
-def crearDataSetUCI():
-    with open('wine/wine-data.txt','r') as fichero:
-        entr = []
-        clas_entr = []
-        for linea in fichero:
-            lista = linea[:-1].split(',')
-            clas_entr.append(int(lista[0]))
-            entr.append([float(x) for x in lista[1:]])
-        fichero.closed
+def pruebaSeparableSinGraficas():
 
-    with open('wineData.py','w') as escritura:
-        escritura.write("wine_entr = {0}\n".format(entr[:47]+entr[59:115]+entr[129:168]))
-        escritura.write("wine_clas_entr = {0}\n".format(clas_entr[:47]+clas_entr[59:115]+clas_entr[129:168]))
-        escritura.write("wine_prueba = {0}\n".format(entr[47:59]+entr[115:129]+entr[168:]))
-        escritura.write("wine_clas_prueba = {0}\n".format(clas_entr[47:59]+clas_entr[115:129]+clas_entr[168:]))
-        escritura.closed
-    print(clas_entr[47:59]+clas_entr[115:129]+clas_entr[168:])
+    X1,Y1=genera_conjunto_de_datos_l_s(4,8,400)
+    X1e,Y1e=X1[:300],Y1[:300]
+    X1t,Y1t=X1[300:],Y1[300:]
 
-from wineData import *
-## 59 clase 1, 71 clase 2, 48 clase 3 --> 12 c1 para prueba, 14 c2 para prueba, 10  c3 para prueba.
-#def entrena(self,entr,clas_entr,n_epochs,rate=0.1,pesos_iniciales=None,rate_decay=False): Perceptrón
-def mejorClasificadorWine():
-    entr = wine_entr
-    clas_entr = wine_clas_entr
-    clases = list(set(clas_entr))
-    n_epochs = 1000
+    #Perceptron
+    print("Perceptron")
+    clas_pb1=Clasificador_Perceptron([0,1])
+    clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal Bach minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_Batch")
+    clas_pb2=Clasificador_RL_L2_Batch([0,1])
+    clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal St minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_St")
+    clas_pb3=Clasificador_RL_L2_St([0,1])
+    clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal Bach maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_Batch")
+    clas_pb4=Clasificador_RL_ML_Batch([0,1])
+    clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal St maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_St")
+    clas_pb5=Clasificador_RL_ML_St([0,1])
+    clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+def pruebaNoSeparableConGraficas():
+
+    X1,Y1=genera_conjunto_de_datos_n_l_s(4,8,400)
+    X1e,Y1e=X1[:300],Y1[:300]
+    X1t,Y1t=X1[300:],Y1[300:]
+
+    #Perceptron
+    print("Perceptron")
+    clas_pb1=Clasificador_Perceptron([0,1])
+    ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac)+1),ac,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+
+    #Regresion Lineal Bach minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_Batch")
+    clas_pb2=Clasificador_RL_L2_Batch([0,1])
+    ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac2)+1),ac2,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error2)+1),error2,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error Cuadrático')
+    plt.show()
+
+    #Regresion Lineal St minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_St")
+    clas_pb3=Clasificador_RL_L2_St([0,1])
+    ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac3)+1),ac3,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error3)+1),error3,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error Cuadrático')
+    plt.show()
+
+    #Regresion Lineal Bach maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_Batch")
+    clas_pb4=Clasificador_RL_ML_Batch([0,1])
+    ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac4)+1),ac4,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error4)+1),error4,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Log verosimilitud')
+    plt.show()
+
+
+    #Regresion Lineal St maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_St")
+    clas_pb5=Clasificador_RL_ML_St([0,1])
+    ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+    plt.plot(range(1,len(ac5)+1),ac5,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Porcentaje de acierto')
+    plt.show()
+    plt.plot(range(1,len(error5)+1),error5,marker='o')
+    plt.xlabel('Epochs')
+    plt.ylabel('Log Verosimilitud')
+    plt.show()
+
+def pruebaNoSeparableSinGraficas():
+
+    X1,Y1=genera_conjunto_de_datos_n_l_s(4,8,400)
+    X1e,Y1e=X1[:300],Y1[:300]
+    X1t,Y1t=X1[300:],Y1[300:]
+
+    #Perceptron
+    print("Perceptron")
+    clas_pb1=Clasificador_Perceptron([0,1])
+    clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal Bach minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_Batch")
+    clas_pb2=Clasificador_RL_L2_Batch([0,1])
+    clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal St minimizando L2
+    print("-----------------------------")
+    print("Clasificador_RL_L2_St")
+    clas_pb3=Clasificador_RL_L2_St([0,1])
+    clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal Bach maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_Batch")
+    clas_pb4=Clasificador_RL_ML_Batch([0,1])
+    clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+    #Regresion Lineal St maximizando verosimilitud
+    print("-----------------------------")
+    print("Clasificador_RL_ML_St")
+    clas_pb5=Clasificador_RL_ML_St([0,1])
+    clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
+    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
+    print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
+
+#----------------------------------------------
+###Pruebas One vs Rest
+
+def prueba_OvR_Iris():
+    entr = iris_entr
+    clas_entr = iris_entr_clas
+    clases = iris_clases
+    prueba = iris_entr
+    clas_prueba = iris_entr_clas
+
+    n_epochs = 100
     rate = 0.01
-    rate_decay = True
+    rate_decay = False
     clasificadores = []
     rendimientos = []
 
     clasificadorMLBatch=Clasificador_RL_OvR(Clasificador_RL_ML_Batch,clases)
     clasificadorMLBatch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
     clasificadores.append(clasificadorMLBatch)
-    rendimientoMLBatch = rendimiento(clasificadorMLBatch,wine_prueba,wine_clas_prueba)
+    rendimientoMLBatch = rendimiento(clasificadorMLBatch,prueba,clas_prueba)
     rendimientos.append(rendimientoMLBatch)
     print("Rendimiento del OvR-MLBatch:",rendimientoMLBatch)
-    
+
     clasificadorMLSt=Clasificador_RL_OvR(Clasificador_RL_ML_St,clases)
     clasificadorMLSt.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
     clasificadores.append(clasificadorMLSt)
-    rendimientoMLSt = rendimiento(clasificadorMLSt,wine_prueba,wine_clas_prueba)
+    rendimientoMLSt = rendimiento(clasificadorMLSt,prueba,clas_prueba)
     rendimientos.append(rendimientoMLSt)
     print("Rendimiento del OvR-MLSt:",rendimientoMLSt)
-    
-    clasficadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
-    clasficadorL2Batch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
-    clasificadores.append(clasficadorL2Batch)
-    rendimientoL2Batch = rendimiento(clasficadorL2Batch,wine_prueba,wine_clas_prueba)
+
+    clasificadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
+    clasificadorL2Batch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorL2Batch)
+    rendimientoL2Batch = rendimiento(clasificadorL2Batch,prueba,clas_prueba)
     rendimientos.append(rendimientoL2Batch)
     print("Rendimiento del OvR-L2Batch:",rendimientoL2Batch)
 
-    clasficadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,clases)
-    clasficadorL2St.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
-    clasificadores.append(clasficadorL2St)
-    rendimientoL2St = rendimiento(clasficadorL2St,wine_prueba,wine_clas_prueba)
+    clasificadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,clases)
+    clasificadorL2St.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorL2St)
+    rendimientoL2St = rendimiento(clasificadorL2St,prueba,clas_prueba)
     rendimientos.append(rendimientoL2St)
     print("Rendimiento del OvR-L2St:",rendimientoL2St)
 
     return clasificadores[rendimientos.index(max(rendimientos))]
-## m es el peso del mejor clasificador    
-## probarPesos(list(set(wine_clas_entr)),m.pesosPorClases)
-## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
-def probarPesos(clases,pesosPorClases):
-    def clasifica(ej):
-        x = []
-        ej = [1]+ej
-        for j in range(len(pesosPorClases)):
-            y = sum(pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
-            x.append(f_sigmoide(y))
-        return clases[x.index(max(x))]
-    return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
 
-def probarPesosPerceptron(clases,pesosPorClases):
-    def clasifica(ej):
-        ej = [1]+ej
-        print(pesosPorClases)
-        umbral = sum(pesosPorClases[i]*ej[i] for i in range(len(ej)))
-        o = f_umbral(umbral)
-        return clases[o]
-    return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
-# In [60]: m = mejorClasificadorWine()
-# Rendimiento del OvR: 0.8888888888888888
-# pesos del anterior rendimiento
-# [[-4.464693575485346,
-#   -43.57991041638832,
-#   -9.391572151683524,
-#   -6.74739397811181,
-#   -132.7910589564548,
-#   -221.73389800636392,
-#   0.04594572086797535,
-#   10.846333937742518,
-#   -1.9918609345517928,
-#   1.0998147943667742,
-#   -15.70881245320547,
-#   -3.5378746279158166,
-#   1.912407028820642,
-#   32.616275132120016],
-#  [3.128022276706968,
-#   27.851287684572082,
-#   -22.89983158183535,
-#   4.565980602913298,
-#   70.06623491027516,
-#   192.52817131856722,
-#   14.14586297780636,
-#   20.464163304184247,
-#   0.5715583511768094,
-#   11.242848701007016,
-#   -62.70951289493242,
-#   11.26196734895127,
-#   24.908400839789365,
-#   -29.301253942773165],
-#  [2.1951112829464345,
-#   24.291241917654194,
-#   40.369633906833315,
-#   6.969099310051722,
-#   85.29402998379574,
-#   94.988009663006,
-#   -17.006795253596046,
-#   -37.569321997235576,
-#   2.454951090244822,
-#   -10.939178520538995,
-#   96.59921837480277,
-#   -10.113767433264647,
-#   -27.213090050164293,
-#   -6.3197935697498515]]
+#----------------------------------------------
+###Pruebas SoftMax
 
-#  Nótese que en cualquiera de los tres casos, consiste en encontrar el
-#  clasificador adecuado, entrenado con los parámetros y opciones
-#  adecuadas. El entrenamiento ha de realizarse sobre el conjunto de
-#  entrenamiento, y el conjunto de validación se emplea para medir el
-#  rendimiento obtenido con los distintas combinaciones de parámetros y
-#  opciones con las que se experimente. Finalmente, una vez elegido la mejor
-#  combinación de parámetros y opciones, se da el rendimiento final sobre el
-#  conjunto de test. Es importante no usar el conjunto de test para decididir
-#  sobre los parámetros, sino sólo para dar el rendimiento final.
+def prueba_Softmax_Iris():
+    iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
+    clas_rlml1=Clasificador_RL_Softmax(iris_clases)
+    clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
+    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
 
-#  En nuestro caso concreto, estas son las opciones y parámetros con los que
-#  hay que experimentar: 
+#----------------------------------------------
 
-#  - En primer lugar, el tipo de clasificador usado (si es batch o
-#    estaocástico, si es basado en error cuadrático o en verosimilitud, si es
-#    softmax o OvR,...)
-#  - n_epochs: el número de epochs realizados influye en el tiempo de
-#    entrenamiento y evidentemente también en la calidad del clasificador
-#    obtenido. Con un número bajo de epochs, no hay suficiente entrenamiento,
-#    pero también hay que decir que un número excesivo de epochs puede
-#    provocar un sobreajuste no deseado. 
-#  - El valor de "rate" usado. 
-#  - Si se usa "rate_decay" o no.
-#  - Si se usa normalización o no. 
+# ----------------------------------
+# III.2 Aplicando los clasificadores
+# ----------------------------------
 
-# Se pide describir brevemente el proceso de experimentación en cada uno de
-# los casos, y finalmente dar el clasificador con el que se obtienen mejor
-# rendimiento sobre el conjunto de test correspondiente.
+#  Obtener un clasificador para cada uno de los siguientes problemas,
+#  intentando que el rendimiento obtenido sobre un conjunto independiente de
+#  ejemplos de prueba sea lo mejor posible.
 
-# Por dar una referencia, se pueden obtener clasificadores para el problema de
-# los votos con un rendimiento sobre el test mayor al 90%, y para los dígitos
-# un rendimiento superior al 80%. 
+#  - Predecir el partido de un congresista en función de lo que ha votado en
+#    las sucesivas votaciones, a partir de los datos en el archivo votos.py que
+#    se suministra.
 
 
 from votos import *
@@ -1255,7 +1252,7 @@ def mejorClasificadorVotos():
 
     entrenamiento = votos_entr
     clases_entrenamiento = votos_entr_clas
-    
+
     validacion = votos_valid
     clases_validacion = votos_valid_clas
 
@@ -1274,7 +1271,7 @@ def mejorClasificadorVotos():
     metodo.append("Perceptron:")
     acuracy.append(acPerceptron)
     misMetodos.append(Perceptron)
-    
+
     ##Clasificador_RL_L2_Batch
     L2_Bach = Clasificador_RL_ML_St(clases)
     a,e = L2_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
@@ -1282,7 +1279,7 @@ def mejorClasificadorVotos():
     metodo.append("Clasificador_RL_L2_Batch:")
     acuracy.append(acL2_bach)
     misMetodos.append(L2_Bach)
- 
+
     ##Clasificador_RL_L2_Batch
     L2_St = Clasificador_RL_L2_St(clases)
     a,e = L2_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
@@ -1333,127 +1330,167 @@ def clasificaMejor(m):
     print("validacion: ",rendimiento(m,votos_valid,votos_valid_clas))
     print(rendimiento(m,votos_test,votos_test_clas))
 
-######################################################################################################### primera prueba
+# ######################################################################################################### primera prueba
 
-# In [83]: mejorClasificadorVotos()
-# con los siguietes parametros:
-#  n_epoch =  50
-#  rate_decay =  True
-#  rate =  0.001
-#  la tasa de aciertos serian:
+# # In [83]: mejorClasificadorVotos()
+# # con los siguietes parametros:
+# #  n_epoch =  50
+# #  rate_decay =  True
+# #  rate =  0.001
+# #  la tasa de aciertos serian:
 
-# Perceptron: 0.9710144927536232
-# Clasificador_RL_L2_Batch: 0.9565217391304348
-# Clasificador_RL_L2_St: 0.9855072463768116
-# Clasificador_RL_ML_Batch: 0.9565217391304348
-# Clasificador_RL_ML_St: 0.9855072463768116
+# # Perceptron: 0.9710144927536232
+# # Clasificador_RL_L2_Batch: 0.9565217391304348
+# # Clasificador_RL_L2_St: 0.9855072463768116
+# # Clasificador_RL_ML_Batch: 0.9565217391304348
+# # Clasificador_RL_ML_St: 0.9855072463768116
 
-# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116
+# # Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116
 
-######################################################################################################### otra prueba con los mismos parametros:
+# ######################################################################################################### otra prueba con los mismos parametros:
 
-# In [84]: mejorClasificadorVotos()
-# con los siguietes parametros:
-#  n_epoch =  50
-#  rate_decay =  True
-#  rate =  0.001
-#  la tasa de aciertos serian:
+# # In [84]: mejorClasificadorVotos()
+# # con los siguietes parametros:
+# #  n_epoch =  50
+# #  rate_decay =  True
+# #  rate =  0.001
+# #  la tasa de aciertos serian:
 
-# Perceptron: 0.9855072463768116
-# Clasificador_RL_L2_Batch: 0.9420289855072463
-# Clasificador_RL_L2_St: 0.9855072463768116
-# Clasificador_RL_ML_Batch: 0.9710144927536232
-# Clasificador_RL_ML_St: 0.9710144927536232
+# # Perceptron: 0.9855072463768116
+# # Clasificador_RL_L2_Batch: 0.9420289855072463
+# # Clasificador_RL_L2_St: 0.9855072463768116
+# # Clasificador_RL_ML_Batch: 0.9710144927536232
+# # Clasificador_RL_ML_St: 0.9710144927536232
 
 
 
-# Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
+# # Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
 
-######################################################################################################### otros parametros
-# In [96]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
-#  n_epoch =  100
-#  rate_decay =  False
-#  rate =  0.001
-#  la tasa de aciertos serian:
+# ######################################################################################################### otros parametros
+# # In [96]: m = mejorClasificadorVotos()
+# # con los siguietes parametros:
+# #  n_epoch =  100
+# #  rate_decay =  False
+# #  rate =  0.001
+# #  la tasa de aciertos serian:
 
-# Perceptron: 0.9565217391304348
-# Clasificador_RL_L2_Batch: 0.7971014492753623
-# Clasificador_RL_L2_St: 0.927536231884058
-# Clasificador_RL_ML_Batch: 1.0
-# Clasificador_RL_ML_St: 0.9565217391304348
+# # Perceptron: 0.9565217391304348
+# # Clasificador_RL_L2_Batch: 0.7971014492753623
+# # Clasificador_RL_L2_St: 0.927536231884058
+# # Clasificador_RL_ML_Batch: 1.0
+# # Clasificador_RL_ML_St: 0.9565217391304348
 
-# Por lo que el mejor seria el Clasificador_RL_ML_Batch: con una acuracy de 1.0
+# # Por lo que el mejor seria el Clasificador_RL_ML_Batch: con una acuracy de 1.0
 
-# In [97]: m.pesos
-# Out[97]:
-# [0.4229950881833548,
-#  0.27317538844627465,
-#  0.711027952150914,
-#  0.6994496767958582,
-#  -2.5717907044593353,
-#  -0.7196720449497429,
-#  0.1325039118550952,
-#  -0.9303798825074252,
-#  -0.1931287690701619,
-#  0.9872705683149539,
-#  -0.3206004413092406,
-#  0.18064387353039402,
-#  -0.050354214937230454,
-#  -0.5078123758537897,
-#  0.1271250545684751,
-#  -0.21250584478649107,
-#  0.443988026989932]
+# # In [97]: m.pesos
+# # Out[97]:
+# # [0.4229950881833548,
+# #  0.27317538844627465,
+# #  0.711027952150914,
+# #  0.6994496767958582,
+# #  -2.5717907044593353,
+# #  -0.7196720449497429,
+# #  0.1325039118550952,
+# #  -0.9303798825074252,
+# #  -0.1931287690701619,
+# #  0.9872705683149539,
+# #  -0.3206004413092406,
+# #  0.18064387353039402,
+# #  -0.050354214937230454,
+# #  -0.5078123758537897,
+# #  0.1271250545684751,
+# #  -0.21250584478649107,
+# #  0.443988026989932]
 
-# In [98]: clasificaMejor(m)
-# <__main__.Clasificador_RL_ML_Batch object at 0x0000029BD2F40400>
-# validacion:  1.0
-# 0.896551724137931
+# # In [98]: clasificaMejor(m)
+# # <__main__.Clasificador_RL_ML_Batch object at 0x0000029BD2F40400>
+# # validacion:  1.0
+# # rendimiento del conjunto de prueba -> 0.896551724137931
 
-######################################################################################################### otros parametros
+# ######################################################################################################### otros parametros
 
-# In [122]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
-#  n_epoch =  100
-#  rate_decay =  True
-#  rate =  0.001
-#  la tasa de aciertos serian:
+# # In [122]: m = mejorClasificadorVotos()
+# # con los siguietes parametros:
+# #  n_epoch =  100
+# #  rate_decay =  True
+# #  rate =  0.001
+# #  la tasa de aciertos serian:
 
-# Perceptron: 0.9855072463768116
-# Clasificador_RL_L2_Batch: 0.9565217391304348
-# Clasificador_RL_L2_St: 0.9855072463768116
-# Clasificador_RL_ML_Batch: 0.9565217391304348
-# Clasificador_RL_ML_St: 0.9565217391304348
+# # Perceptron: 0.9855072463768116
+# # Clasificador_RL_L2_Batch: 0.9565217391304348
+# # Clasificador_RL_L2_St: 0.9855072463768116
+# # Clasificador_RL_ML_Batch: 0.9565217391304348
+# # Clasificador_RL_ML_St: 0.9565217391304348
 
-# Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
+# # Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
 
-# In [123]: m.pesos
-# Out[123]:
-# [3.4671723097946203,
-#  0.7464109670914848,
-#  3.276934471391926,
-#  5.901662769684045,
-#  -16.477172309794625,
-#  2.242677540873024,
-#  5.709891103246117,
-#  -6.591827690205382,
-#  1.753322459126976,
-#  5.204156721980204,
-#  -2.2466775408730255,
-#  3.8496627696840537,
-#  -4.13029305517104,
-#  4.6298718653502915,
-#  -2.6870794927979476,
-#  3.252777422460347,
-#  2.5885619234229367]
+# # In [123]: m.pesos
+# # Out[123]:
+# # [3.4671723097946203,
+# #  0.7464109670914848,
+# #  3.276934471391926,
+# #  5.901662769684045,
+# #  -16.477172309794625,
+# #  2.242677540873024,
+# #  5.709891103246117,
+# #  -6.591827690205382,
+# #  1.753322459126976,
+# #  5.204156721980204,
+# #  -2.2466775408730255,
+# #  3.8496627696840537,
+# #  -4.13029305517104,
+# #  4.6298718653502915,
+# #  -2.6870794927979476,
+# #  3.252777422460347,
+# #  2.5885619234229367]
 
-# In [124]: clasificaMejor(m)
-# <__main__.Clasificador_Perceptron object at 0x0000029BD2FF74A8>
-# validacion:  0.9855072463768116
-# 0.931034482758620
+# # In [124]: clasificaMejor(m)
+# # <__main__.Clasificador_Perceptron object at 0x0000029BD2FF74A8>
+# # validacion:  0.9855072463768116
+# # rendimiento del conjunto de prueba -> 0.931034482758620
+
+
+#----------------------------------------------
+
+#----------------------------------------------
+
+
+#  - Predecir el dígito que se ha escrito a mano y que se dispone en forma de
+#    imagen pixelada, a partir de los datos que están en el archivo digidata.zip
+#    que se suministra.  Cada imagen viene dada por 28x28 píxeles, y cada pixel
+#    vendrá representado por un caracter "espacio en blanco" (pixel blanco) o
+#    los caracteres "+" (borde del dígito) o "#" (interior del dígito). En
+#    nuestro caso trataremos ambos como un pixel negro (es decir, no
+#    distinguiremos entre el borde y el interior). En cada conjunto las imágenes
+#    vienen todas seguidas en un fichero de texto, y las clasificaciones de cada
+#    imagen (es decir, el número que representan) vienen en un fichero aparte,
+#    en el mismo orden. Será necesario, por tanto, definir funciones python que
+#    lean esos ficheros y obtengan los datos en el mismo formato python en el
+#    que los necesitan los algoritmos.
+
+def leer():
+    with open('digitdata/trainingimages','r') as fichero:
+        total = []
+        v = []
+        i=0
+        for linea in fichero:
+            w = []
+            i+=1
+            for posicion in linea[:-1]:
+                if " " == posicion:
+                    w.append(0)
+                else:
+                    w.append(1)
+            v.append(w)
+            if(i==28):
+                i=0
+                total.append(v)
+                v = []
+        fichero.closed
+    return total
+
 
 entrenaFichero = []
-
 def leerEntrena():
     with open('digitdata/trainingimages','r') as fichero:
         total = []
@@ -1519,8 +1556,6 @@ clasesValidaFichero = leerClasesValida()
 
 ######
 
-
-
 testFichero = []
 def leerTest():
     with open('digitdata/testimages','r') as fichero:
@@ -1565,32 +1600,31 @@ clasesFichero = clasesParaFichero()
 
 ######
 
-def pruebaDigit2o():
-    
-    epoch = 2
-    decay=False
-    valor=0.001
+def prueba_Digitos():
 
-    misMetodos = []
+    epoch = 100
+    decay=False
+    valor=0.01
+
+    misClasificadores = []
     metodo = []
     acuracy = []
-    
-    ##one vs rest L2_Bach
+
+    ##one vs rest ML_ST
     one_restL2 = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
     one_restL2.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
-    print("yuju")
     acOneRestL2 = rendimiento(one_restL2,entrenaFichero,clasesEntrenaFichero)
     metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
     acuracy.append(acOneRestL2)
-    misMetodos.append(one_restL2)
+    misClasificadores.append(one_restL2)
 
-    ##one vs rest L2_St
-    # one_restL2St = Clasificador_RL_OvR(Clasificador_RL_L2_St,clasesFichero)
-    # one_restL2St.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
-    # acOneRestL2St = rendimiento(one_restL2St,entrenaFichero,clasesEntrenaFichero)
-    # metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
-    # acuracy.append(acOneRestL2St)
-    # misMetodos.append(one_restL2St)
+    ##one vs rest ML_BATCH
+    one_restMLST = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
+    one_restMLST.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
+    acOneRestMLST = rendimiento(one_restMLST,entrenaFichero,clasesEntrenaFichero)
+    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
+    acuracy.append(acOneRestMLST)
+    misClasificadores.append(one_restMLST)
 
     print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
     "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
@@ -1603,7 +1637,173 @@ def pruebaDigit2o():
 
     print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice])
 
-    return misMetodos[indice]
+    return misClasificadores[indice]
+
+#----------------------------------------------
+
+#----------------------------------------------
+
+#  - Cualquier otro problema de clasificación (por ejemplo,
+#    alguno de los que se pueden encontrar en UCI Machine Learning repository,
+#    http://archive.ics.uci.edu/ml/). Téngase en cuenta que el conjunto de
+#    datos que se use ha de tener sus atríbutos numéricos. Sin embargo,
+#    también es posible transformar atributos no numéricos en numéricos usando
+#    la técnica conocida como "one hot encoding".
+
+def crearDataSetUCI():
+    with open('wine/wine-data.txt','r') as fichero:
+        entr = []
+        clas_entr = []
+        for linea in fichero:
+            lista = linea[:-1].split(',')
+            clas_entr.append(int(lista[0]))
+            entr.append([float(x) for x in lista[1:]])
+        fichero.closed
+
+    with open('wineData.py','w') as escritura:
+        escritura.write("wine_entr = {0}\n".format(entr[:47]+entr[59:115]+entr[129:168]))
+        escritura.write("wine_clas_entr = {0}\n".format(clas_entr[:47]+clas_entr[59:115]+clas_entr[129:168]))
+        escritura.write("wine_prueba = {0}\n".format(entr[47:59]+entr[115:129]+entr[168:]))
+        escritura.write("wine_clas_prueba = {0}\n".format(clas_entr[47:59]+clas_entr[115:129]+clas_entr[168:]))
+        escritura.closed
+
+from wineData import *
+
+def mejorClasificadorWine():
+    entr = wine_entr
+    clas_entr = wine_clas_entr
+    clases = list(set(clas_entr))
+    n_epochs = 100
+    rate = 0.01
+    rate_decay = False
+    clasificadores = []
+    rendimientos = []
+
+    clasificadorMLBatch=Clasificador_RL_OvR(Clasificador_RL_ML_Batch,clases)
+    clasificadorMLBatch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorMLBatch)
+    rendimientoMLBatch = rendimiento(clasificadorMLBatch,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoMLBatch)
+    print("Rendimiento del OvR-MLBatch:",rendimientoMLBatch)
+
+    clasificadorMLSt=Clasificador_RL_OvR(Clasificador_RL_ML_St,clases)
+    clasificadorMLSt.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasificadorMLSt)
+    rendimientoMLSt = rendimiento(clasificadorMLSt,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoMLSt)
+    print("Rendimiento del OvR-MLSt:",rendimientoMLSt)
+
+    clasficadorL2Batch=Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
+    clasficadorL2Batch.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasficadorL2Batch)
+    rendimientoL2Batch = rendimiento(clasficadorL2Batch,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoL2Batch)
+    print("Rendimiento del OvR-L2Batch:",rendimientoL2Batch)
+
+    clasficadorL2St=Clasificador_RL_OvR(Clasificador_RL_L2_St,clases)
+    clasficadorL2St.entrena(entr,clas_entr,n_epochs,rate_decay,rate)
+    clasificadores.append(clasficadorL2St)
+    rendimientoL2St = rendimiento(clasficadorL2St,wine_prueba,wine_clas_prueba)
+    rendimientos.append(rendimientoL2St)
+    print("Rendimiento del OvR-L2St:",rendimientoL2St)
+
+    return clasificadores[rendimientos.index(max(rendimientos))]
+
+## m es el peso del mejor clasificador
+## probarPesos(list(set(wine_clas_entr)),m.pesosPorClases)
+## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
+def probarPesos(clases,pesosPorClases):
+    def clasifica(ej):
+        x = []
+        ej = [1]+ej
+        for j in range(len(pesosPorClases)):
+            y = sum(pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
+            x.append(f_sigmoide(y))
+        return clases[x.index(max(x))]
+    return sum(clasifica(x) == y for x,y in zip(wine_prueba,wine_clas_prueba))/len(wine_clas_prueba)
+
+# # In [60]: m = mejorClasificadorWine()
+# # Rendimiento del OvR: 0.8888888888888888
+# pesos del anterior rendimiento
+# [[-4.464693575485346,
+#   -43.57991041638832,
+#   -9.391572151683524,
+#   -6.74739397811181,
+#   -132.7910589564548,
+#   -221.73389800636392,
+#   0.04594572086797535,
+#   10.846333937742518,
+#   -1.9918609345517928,
+#   1.0998147943667742,
+#   -15.70881245320547,
+#   -3.5378746279158166,
+#   1.912407028820642,
+#   32.616275132120016],
+#  [3.128022276706968,
+#   27.851287684572082,
+#   -22.89983158183535,
+#   4.565980602913298,
+#   70.06623491027516,
+#   192.52817131856722,
+#   14.14586297780636,
+#   20.464163304184247,
+#   0.5715583511768094,
+#   11.242848701007016,
+#   -62.70951289493242,
+#   11.26196734895127,
+#   24.908400839789365,
+#   -29.301253942773165],
+#  [2.1951112829464345,
+#   24.291241917654194,
+#   40.369633906833315,
+#   6.969099310051722,
+#   85.29402998379574,
+#   94.988009663006,
+#   -17.006795253596046,
+#   -37.569321997235576,
+#   2.454951090244822,
+#   -10.939178520538995,
+#   96.59921837480277,
+#   -10.113767433264647,
+#   -27.213090050164293,
+#   -6.3197935697498515]]
+
+#----------------------------------------------
+
+#----------------------------------------------
+
+#  Nótese que en cualquiera de los tres casos, consiste en encontrar el
+#  clasificador adecuado, entrenado con los parámetros y opciones
+#  adecuadas. El entrenamiento ha de realizarse sobre el conjunto de
+#  entrenamiento, y el conjunto de validación se emplea para medir el
+#  rendimiento obtenido con los distintas combinaciones de parámetros y
+#  opciones con las que se experimente. Finalmente, una vez elegido la mejor
+#  combinación de parámetros y opciones, se da el rendimiento final sobre el
+#  conjunto de test. Es importante no usar el conjunto de test para decididir
+#  sobre los parámetros, sino sólo para dar el rendimiento final.
+
+#  En nuestro caso concreto, estas son las opciones y parámetros con los que
+#  hay que experimentar:
+
+#  - En primer lugar, el tipo de clasificador usado (si es batch o
+#    estaocástico, si es basado en error cuadrático o en verosimilitud, si es
+#    softmax o OvR,...)
+#  - n_epochs: el número de epochs realizados influye en el tiempo de
+#    entrenamiento y evidentemente también en la calidad del clasificador
+#    obtenido. Con un número bajo de epochs, no hay suficiente entrenamiento,
+#    pero también hay que decir que un número excesivo de epochs puede
+#    provocar un sobreajuste no deseado.
+#  - El valor de "rate" usado.
+#  - Si se usa "rate_decay" o no.
+#  - Si se usa normalización o no.
+
+# Se pide describir brevemente el proceso de experimentación en cada uno de
+# los casos, y finalmente dar el clasificador con el que se obtienen mejor
+# rendimiento sobre el conjunto de test correspondiente.
+
+# Por dar una referencia, se pueden obtener clasificadores para el problema de
+# los votos con un rendimiento sobre el test mayor al 90%, y para los dígitos
+# un rendimiento superior al 80%.
 
 # with open('digitdata/traininglabels','r') as fichero:
 #     v = [int(l) for l in fichero]
