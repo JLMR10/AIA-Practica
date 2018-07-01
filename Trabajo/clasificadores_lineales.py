@@ -793,7 +793,6 @@ class Clasificador_RL_OvR():
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
         for i in range(len(self.clasesC)):
-            print(i)
             clasesAux = [self.clasesC[0:i]+self.clasesC[i+1:],self.clasesC[i:i+1]]
             clasificador = self.class_clasifC([0,1])
             clas_entrAux = convertidorMulticlase(clasesAux,clas_entr)
@@ -918,7 +917,7 @@ from iris import *
 # Out[36]: 0.9666666666666667
 # ---------------------------------------------------------
 def rendimiento(clasificador,entr,clas_entr):
-    return sum(Clasificador_RL_OvR.clasifica(clasificador,x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
+    return sum(clasificador.clasifica(x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
 
 ###=================================================================================================
 ##TESTS
@@ -1258,9 +1257,9 @@ def mejorClasificadorVotos():
     validacion = votos_valid
     clases_validacion = votos_valid_clas
 
-    epoch = 100
-    decay=False
-    valor=0.001
+    epoch = 1000
+    decay=True
+    valor=0.01
 
     misMetodos = []
     metodo = []
@@ -1306,13 +1305,6 @@ def mejorClasificadorVotos():
     acuracy.append(acML_St)
     misMetodos.append(ML_St)
 
-    ##One vs Rest L2_Batch
-    one_restL2 = Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
-    one_restL2.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
-    acOneRestL2 = rendimiento(one_restL2,validacion,clases_validacion)
-    metodo.append("One vs Rest con Clasificador_RL_L2_Batch:")
-    acuracy.append(acOneRestL2)
-    misMetodos.append(one_restL2)
 
     print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
     "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
@@ -1323,135 +1315,111 @@ def mejorClasificadorVotos():
     mejor = max(acuracy)
     indice = acuracy.index(mejor)
 
-    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice])
+    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice],"para el conjunto de validación")
 
     return misMetodos[indice]
 
-def clasificaMejor(m):
-    print(m)
-    print("validacion: ",rendimiento(m,votos_valid,votos_valid_clas))
-    print(rendimiento(m,votos_test,votos_test_clas))
+
+def probarPesosVotos(pesos,nombreClasif):
+    clasificador = nombreClasif(votos_clases)
+    clasificador.pesos = pesos 
+    print("validacion:",rendimiento(clasificador,votos_valid,votos_valid_clas))
+    print("prueba:",rendimiento(clasificador,votos_test,votos_test_clas))
 
 # ######################################################################################################### primera prueba
 
-# # In [83]: mejorClasificadorVotos()
-# # con los siguietes parametros:
-# #  n_epoch =  50
-# #  rate_decay =  True
-# #  rate =  0.001
-# #  la tasa de aciertos serian:
 
-# # Perceptron: 0.9710144927536232
-# # Clasificador_RL_L2_Batch: 0.9565217391304348
-# # Clasificador_RL_L2_St: 0.9855072463768116
-# # Clasificador_RL_ML_Batch: 0.9565217391304348
-# # Clasificador_RL_ML_St: 0.9855072463768116
+# In [312]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  True
+#  rate =  0.01
+#  la tasa de aciertos serian:
 
-# # Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116
+# Perceptron: 0.9565217391304348
+# Clasificador_RL_L2_Batch: 0.9565217391304348
+# Clasificador_RL_L2_St: 0.9855072463768116
+# Clasificador_RL_ML_Batch: 0.9565217391304348
+# Clasificador_RL_ML_St: 0.9710144927536232
 
-# ######################################################################################################### otra prueba con los mismos parametros:
+# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116 para el conjunto de validación
+# pesosVotos = [1.216012196209644,0.1474549075290975,-0.07764398622895145,1.9886215148004798,-4.361093770119169,-0.34328186963962626,
+#  0.900568778476931,-1.288091566157545,-0.16268163121980186,0.808633407187405,-0.06442365233492293,1.1422904524363713,
+#  -0.3330466650775169,1.3560247291444998,-0.6134059817882892,0.13086853584455305,-0.3366887928098736]
+# Comprobando que es real:
+# In [313]: probarPesosVotos(pesosVotos,Clasificador_RL_L2_St)
+# validacion: 0.9855072463768116
+# prueba: 0.9195402298850575
 
-# # In [84]: mejorClasificadorVotos()
-# # con los siguietes parametros:
-# #  n_epoch =  50
-# #  rate_decay =  True
-# #  rate =  0.001
-# #  la tasa de aciertos serian:
+#####
+# In [326]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.01
+#  la tasa de aciertos serian:
 
-# # Perceptron: 0.9855072463768116
-# # Clasificador_RL_L2_Batch: 0.9420289855072463
-# # Clasificador_RL_L2_St: 0.9855072463768116
-# # Clasificador_RL_ML_Batch: 0.9710144927536232
-# # Clasificador_RL_ML_St: 0.9710144927536232
+# Perceptron: 0.9710144927536232
+# Clasificador_RL_L2_Batch: 1.0
+# Clasificador_RL_L2_St: 0.9710144927536232
+# Clasificador_RL_ML_Batch: 0.9855072463768116
+# Clasificador_RL_ML_St: 0.9855072463768116
 
+# Por lo que el mejor seria el Clasificador_RL_L2_Batch: con una acuracy de 1.0 para el conjunto de validación
+# pesosVotos = [0.6856406135370731,0.17488631422530734,0.10381398138623765,1.2683359839730854,-2.07667231549208,
+#  0.3365918381282302,-0.4110210109328556,0.003909764246512483,-0.08019283156312663,0.5127505190636534,0.011365744130015214,
+#  1.1228468366373592,-1.0029004746215915,0.27804009279549663,0.2679548753019784,-0.31344301772172134, 0.19831655715205032]
+# Comprobando que es real:
+# In [328]: probarPesosVotos(pesosVotos,Clasificador_RL_L2_Batch)
+# validacion: 1.0
+# prueba: 0.8850574712643678
 
+#####
 
-# # Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
+# In [342]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.001
+#  la tasa de aciertos serian:
 
-# ######################################################################################################### otros parametros
-# # In [96]: m = mejorClasificadorVotos()
-# # con los siguietes parametros:
-# #  n_epoch =  100
-# #  rate_decay =  False
-# #  rate =  0.001
-# #  la tasa de aciertos serian:
+# Perceptron: 0.927536231884058
+# Clasificador_RL_L2_Batch: 0.8260869565217391
+# Clasificador_RL_L2_St: 0.9710144927536232
+# Clasificador_RL_ML_Batch: 0.9420289855072463
+# Clasificador_RL_ML_St: 1.0
 
-# # Perceptron: 0.9565217391304348
-# # Clasificador_RL_L2_Batch: 0.7971014492753623
-# # Clasificador_RL_L2_St: 0.927536231884058
-# # Clasificador_RL_ML_Batch: 1.0
-# # Clasificador_RL_ML_St: 0.9565217391304348
+# Por lo que el mejor seria el Clasificador_RL_ML_St: con una acuracy de 1.0 para el conjunto de validación
+# pesosVotos = [1.0552702835552825,0.0999474498173142,0.1118974660987374,0.5247452441031819,-1.9395631616284454,
+#  0.37053987696292645,0.26169132858781313,-0.11866760717494182,0.26968111313429916,0.9984987953149133,-0.3200279456312852,
+#  0.8624195694699608,-0.7148819064644111,0.3011491413760779,-0.668770002574754,0.1741164365054168,0.01335097046276845]
+# Comprobando que es real:
+# In [343]: probarPesosVotos(pesosVotos,Clasificador_RL_ML_St)
+# validacion: 1.0
+# prueba: 0.9080459770114943
 
-# # Por lo que el mejor seria el Clasificador_RL_ML_Batch: con una acuracy de 1.0
+#####
+# In [349]: m = mejorClasificadorVotos()
+# con los siguietes parametros:
+#  n_epoch =  1000
+#  rate_decay =  True
+#  rate =  0.01
+#  la tasa de aciertos serian:
 
-# # In [97]: m.pesos
-# # Out[97]:
-# # [0.4229950881833548,
-# #  0.27317538844627465,
-# #  0.711027952150914,
-# #  0.6994496767958582,
-# #  -2.5717907044593353,
-# #  -0.7196720449497429,
-# #  0.1325039118550952,
-# #  -0.9303798825074252,
-# #  -0.1931287690701619,
-# #  0.9872705683149539,
-# #  -0.3206004413092406,
-# #  0.18064387353039402,
-# #  -0.050354214937230454,
-# #  -0.5078123758537897,
-# #  0.1271250545684751,
-# #  -0.21250584478649107,
-# #  0.443988026989932]
+# Perceptron: 0.9420289855072463
+# Clasificador_RL_L2_Batch: 0.9565217391304348
+# Clasificador_RL_L2_St: 0.9710144927536232
+# Clasificador_RL_ML_Batch: 0.9710144927536232
+# Clasificador_RL_ML_St: 0.9710144927536232
 
-# # In [98]: clasificaMejor(m)
-# # <__main__.Clasificador_RL_ML_Batch object at 0x0000029BD2F40400>
-# # validacion:  1.0
-# # rendimiento del conjunto de prueba -> 0.896551724137931
-
-# ######################################################################################################### otros parametros
-
-# # In [122]: m = mejorClasificadorVotos()
-# # con los siguietes parametros:
-# #  n_epoch =  100
-# #  rate_decay =  True
-# #  rate =  0.001
-# #  la tasa de aciertos serian:
-
-# # Perceptron: 0.9855072463768116
-# # Clasificador_RL_L2_Batch: 0.9565217391304348
-# # Clasificador_RL_L2_St: 0.9855072463768116
-# # Clasificador_RL_ML_Batch: 0.9565217391304348
-# # Clasificador_RL_ML_St: 0.9565217391304348
-
-# # Por lo que el mejor seria el Perceptron: con una acuracy de 0.9855072463768116
-
-# # In [123]: m.pesos
-# # Out[123]:
-# # [3.4671723097946203,
-# #  0.7464109670914848,
-# #  3.276934471391926,
-# #  5.901662769684045,
-# #  -16.477172309794625,
-# #  2.242677540873024,
-# #  5.709891103246117,
-# #  -6.591827690205382,
-# #  1.753322459126976,
-# #  5.204156721980204,
-# #  -2.2466775408730255,
-# #  3.8496627696840537,
-# #  -4.13029305517104,
-# #  4.6298718653502915,
-# #  -2.6870794927979476,
-# #  3.252777422460347,
-# #  2.5885619234229367]
-
-# # In [124]: clasificaMejor(m)
-# # <__main__.Clasificador_Perceptron object at 0x0000029BD2FF74A8>
-# # validacion:  0.9855072463768116
-# # rendimiento del conjunto de prueba -> 0.931034482758620
-
-
+# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9710144927536232 para el conjunto de validación
+# pesosVotos = [0.246092944077681,0.4914157773120384,0.103631650946021,2.373783114701572,-4.908642850004016,
+#  -0.47583840810574407,1.7735618786330514,-0.6138140078082851,-0.012100272079869585,1.1100442802337653,-0.1747288269540885,
+#  1.4652777369032581,-0.540071609747973,1.9989113230738291,0.003719423215600246,0.39270697159225443,-0.2126114460212745]
+# Comprobando que es real:
+# In [350]: probarPesosVotos(pesosVotos,Clasificador_RL_L2_St)
+# validacion: 0.9710144927536232
+# prueba: 0.9195402298850575
 #----------------------------------------------
 
 #----------------------------------------------
@@ -1661,7 +1629,7 @@ def prueba_Digitos():
 # One vs Rest con Clasificador_RL_ML_Batch: 0.185
 # One vs Rest con Clasificador_RL_ML_St: 0.842
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.811 para el conjunto de test
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.826 para el conjunto de test
 
 # In [254]: m = prueba_Digitos()
 # con los siguietes parametros:
@@ -1673,7 +1641,7 @@ def prueba_Digitos():
 # One vs Rest con Clasificador_RL_ML_Batch: 0.804
 # One vs Rest con Clasificador_RL_ML_St: 0.856
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.835 para el conjunto de test
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.811 para el conjunto de test
 
 # m = prueba_Digitos()
 # con los siguietes parametros:
