@@ -407,7 +407,7 @@ class Clasificador_Perceptron():
 
 ##################################################################################
 
-## Clasificador de Regresion Lineal Bach  minimizando L2
+## Clasificador de regresión Lineal Bach  minimizando L2
 
 class Clasificador_RL_L2_Batch:
 
@@ -469,7 +469,7 @@ class Clasificador_RL_L2_Batch:
 
 ##################################################################################
 
-## Clasificador Regresion Lineal St minimizando L2
+## Clasificador regresión Lineal St minimizando L2
 
 class Clasificador_RL_L2_St:
 
@@ -531,7 +531,7 @@ class Clasificador_RL_L2_St:
 
 ##################################################################################
 
-##Clasificador Regresion Lineal Bach maximizando verosimilitud
+##Clasificador regresión Lineal Bach maximizando verosimilitud
 
 class Clasificador_RL_ML_Batch:
 
@@ -601,7 +601,7 @@ class Clasificador_RL_ML_Batch:
 
 ##################################################################################
 
-##Clasificador Regresion Lineal St maximizando verosimilitud
+##Clasificador regresión Lineal St maximizando verosimilitud
 
 class Clasificador_RL_ML_St:
 
@@ -942,7 +942,7 @@ def pruebaSeparableConGraficas():
     plt.ylabel('Porcentaje de acierto')
     plt.show()
 
-    #Regresion Lineal Bach minimizando L2
+    #regresión Lineal Bach minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
@@ -958,7 +958,7 @@ def pruebaSeparableConGraficas():
     plt.ylabel('Error Cuadrático')
     plt.show()
 
-    #Regresion Lineal St minimizando L2
+    #regresión Lineal St minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
@@ -974,7 +974,7 @@ def pruebaSeparableConGraficas():
     plt.ylabel('Error Cuadrático')
     plt.show()
 
-    #Regresion Lineal Bach maximizando verosimilitud
+    #regresión Lineal Bach maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
@@ -991,7 +991,7 @@ def pruebaSeparableConGraficas():
     plt.show()
 
 
-    #Regresion Lineal St maximizando verosimilitud
+    #regresión Lineal St maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
@@ -1019,7 +1019,7 @@ def pruebaSeparableSinGraficas():
     clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal Bach minimizando L2
+    #regresión Lineal Bach minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
@@ -1027,7 +1027,7 @@ def pruebaSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal St minimizando L2
+    #regresión Lineal St minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
@@ -1035,7 +1035,7 @@ def pruebaSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal Bach maximizando verosimilitud
+    #regresión Lineal Bach maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
@@ -1043,7 +1043,7 @@ def pruebaSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal St maximizando verosimilitud
+    #regresión Lineal St maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
@@ -1067,7 +1067,7 @@ def pruebaNoSeparableConGraficas():
     plt.ylabel('Porcentaje de acierto')
     plt.show()
 
-    #Regresion Lineal Bach minimizando L2
+    #regresión Lineal Bach minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
@@ -1083,7 +1083,7 @@ def pruebaNoSeparableConGraficas():
     plt.ylabel('Error Cuadrático')
     plt.show()
 
-    #Regresion Lineal St minimizando L2
+    #regresión Lineal St minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
@@ -1099,7 +1099,7 @@ def pruebaNoSeparableConGraficas():
     plt.ylabel('Error Cuadrático')
     plt.show()
 
-    #Regresion Lineal Bach maximizando verosimilitud
+    #regresión Lineal Bach maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
@@ -1116,7 +1116,7 @@ def pruebaNoSeparableConGraficas():
     plt.show()
 
 
-    #Regresion Lineal St maximizando verosimilitud
+    #regresión Lineal St maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
@@ -1144,7 +1144,7 @@ def pruebaNoSeparableSinGraficas():
     clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal Bach minimizando L2
+    #regresión Lineal Bach minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
@@ -1152,7 +1152,7 @@ def pruebaNoSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal St minimizando L2
+    #regresión Lineal St minimizando L2
     print("-----------------------------")
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
@@ -1160,7 +1160,7 @@ def pruebaNoSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal Bach maximizando verosimilitud
+    #regresión Lineal Bach maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
@@ -1168,7 +1168,7 @@ def pruebaNoSeparableSinGraficas():
     print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
-    #Regresion Lineal St maximizando verosimilitud
+    #regresión Lineal St maximizando verosimilitud
     print("-----------------------------")
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
@@ -1263,14 +1263,14 @@ def mejorClasificadorVotos():
 
     misMetodos = []
     metodo = []
-    acuracy = []
+    accuracy = []
 
     ## Perceptron
     Perceptron = Clasificador_Perceptron(clases)
     Perceptron.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay= decay, rate=valor)
     acPerceptron = rendimiento(Perceptron,validacion,clases_validacion)
     metodo.append("Perceptron:")
-    acuracy.append(acPerceptron)
+    accuracy.append(acPerceptron)
     misMetodos.append(Perceptron)
 
     ##Clasificador_RL_L2_Batch
@@ -1278,7 +1278,7 @@ def mejorClasificadorVotos():
     L2_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acL2_bach = rendimiento(L2_Bach,validacion,clases_validacion)
     metodo.append("Clasificador_RL_L2_Batch:")
-    acuracy.append(acL2_bach)
+    accuracy.append(acL2_bach)
     misMetodos.append(L2_Bach)
 
     ##Clasificador_RL_L2_St
@@ -1286,7 +1286,7 @@ def mejorClasificadorVotos():
     L2_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acL2_St = rendimiento(L2_St,validacion,clases_validacion)
     metodo.append("Clasificador_RL_L2_St:")
-    acuracy.append(acL2_St)
+    accuracy.append(acL2_St)
     misMetodos.append(L2_St)
 
     ##Clasificador_RL_ML_Batch
@@ -1294,7 +1294,7 @@ def mejorClasificadorVotos():
     ML_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acML_Bach = rendimiento(ML_Bach,validacion,clases_validacion)
     metodo.append("Clasificador_RL_ML_Batch:")
-    acuracy.append(acML_Bach)
+    accuracy.append(acML_Bach)
     misMetodos.append(ML_Bach)
 
     ##Clasificador_RL_ML_St
@@ -1302,20 +1302,20 @@ def mejorClasificadorVotos():
     ML_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acML_St = rendimiento(ML_St,validacion,clases_validacion)
     metodo.append("Clasificador_RL_ML_St:")
-    acuracy.append(acML_St)
+    accuracy.append(acML_St)
     misMetodos.append(ML_St)
 
 
-    print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
-    "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
+    print("con los siguientes parámetros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
+    "\n rate = ",valor,"\n la tasa de aciertos serían: \n")
 
     for i in range(len(metodo)):
-        print(metodo[i],acuracy[i])
+        print(metodo[i],accuracy[i])
 
-    mejor = max(acuracy)
-    indice = acuracy.index(mejor)
+    mejor = max(accuracy)
+    indice = accuracy.index(mejor)
 
-    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice],"para el conjunto de validación")
+    print("\nPor lo que el mejor sería el",metodo[indice], "con una accuracy de",accuracy[indice],"para el conjunto de validación")
 
     return misMetodos[indice]
 
@@ -1330,11 +1330,11 @@ def probarPesosVotos(pesos,nombreClasif):
 
 
 # In [312]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  True
 #  rate =  0.01
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # Perceptron: 0.9565217391304348
 # Clasificador_RL_L2_Batch: 0.9565217391304348
@@ -1342,7 +1342,7 @@ def probarPesosVotos(pesos,nombreClasif):
 # Clasificador_RL_ML_Batch: 0.9565217391304348
 # Clasificador_RL_ML_St: 0.9710144927536232
 
-# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9855072463768116 para el conjunto de validación
+# Por lo que el mejor sería el Clasificador_RL_L2_St: con una accuracy de 0.9855072463768116 para el conjunto de validación
 # pesosVotos = [1.216012196209644,0.1474549075290975,-0.07764398622895145,1.9886215148004798,-4.361093770119169,-0.34328186963962626,
 #  0.900568778476931,-1.288091566157545,-0.16268163121980186,0.808633407187405,-0.06442365233492293,1.1422904524363713,
 #  -0.3330466650775169,1.3560247291444998,-0.6134059817882892,0.13086853584455305,-0.3366887928098736]
@@ -1353,11 +1353,11 @@ def probarPesosVotos(pesos,nombreClasif):
 
 #####
 # In [326]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  False
 #  rate =  0.01
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # Perceptron: 0.9710144927536232
 # Clasificador_RL_L2_Batch: 1.0
@@ -1365,7 +1365,7 @@ def probarPesosVotos(pesos,nombreClasif):
 # Clasificador_RL_ML_Batch: 0.9855072463768116
 # Clasificador_RL_ML_St: 0.9855072463768116
 
-# Por lo que el mejor seria el Clasificador_RL_L2_Batch: con una acuracy de 1.0 para el conjunto de validación
+# Por lo que el mejor sería el Clasificador_RL_L2_Batch: con una accuracy de 1.0 para el conjunto de validación
 # pesosVotos = [0.6856406135370731,0.17488631422530734,0.10381398138623765,1.2683359839730854,-2.07667231549208,
 #  0.3365918381282302,-0.4110210109328556,0.003909764246512483,-0.08019283156312663,0.5127505190636534,0.011365744130015214,
 #  1.1228468366373592,-1.0029004746215915,0.27804009279549663,0.2679548753019784,-0.31344301772172134, 0.19831655715205032]
@@ -1377,11 +1377,11 @@ def probarPesosVotos(pesos,nombreClasif):
 #####
 
 # In [342]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  False
 #  rate =  0.001
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # Perceptron: 0.927536231884058
 # Clasificador_RL_L2_Batch: 0.8260869565217391
@@ -1389,7 +1389,7 @@ def probarPesosVotos(pesos,nombreClasif):
 # Clasificador_RL_ML_Batch: 0.9420289855072463
 # Clasificador_RL_ML_St: 1.0
 
-# Por lo que el mejor seria el Clasificador_RL_ML_St: con una acuracy de 1.0 para el conjunto de validación
+# Por lo que el mejor sería el Clasificador_RL_ML_St: con una accuracy de 1.0 para el conjunto de validación
 # pesosVotos = [1.0552702835552825,0.0999474498173142,0.1118974660987374,0.5247452441031819,-1.9395631616284454,
 #  0.37053987696292645,0.26169132858781313,-0.11866760717494182,0.26968111313429916,0.9984987953149133,-0.3200279456312852,
 #  0.8624195694699608,-0.7148819064644111,0.3011491413760779,-0.668770002574754,0.1741164365054168,0.01335097046276845]
@@ -1400,11 +1400,11 @@ def probarPesosVotos(pesos,nombreClasif):
 
 #####
 # In [349]: m = mejorClasificadorVotos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  1000
 #  rate_decay =  True
 #  rate =  0.01
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # Perceptron: 0.9420289855072463
 # Clasificador_RL_L2_Batch: 0.9565217391304348
@@ -1412,7 +1412,7 @@ def probarPesosVotos(pesos,nombreClasif):
 # Clasificador_RL_ML_Batch: 0.9710144927536232
 # Clasificador_RL_ML_St: 0.9710144927536232
 
-# Por lo que el mejor seria el Clasificador_RL_L2_St: con una acuracy de 0.9710144927536232 para el conjunto de validación
+# Por lo que el mejor sería el Clasificador_RL_L2_St: con una accuracy de 0.9710144927536232 para el conjunto de validación
 # pesosVotos = [0.246092944077681,0.4914157773120384,0.103631650946021,2.373783114701572,-4.908642850004016,
 #  -0.47583840810574407,1.7735618786330514,-0.6138140078082851,-0.012100272079869585,1.1100442802337653,-0.1747288269540885,
 #  1.4652777369032581,-0.540071609747973,1.9989113230738291,0.003719423215600246,0.39270697159225443,-0.2126114460212745]
@@ -1605,8 +1605,8 @@ def prueba_Digitos():
     accuracy.append(acOneRestMLST)
     misClasificadores.append(one_restMLST)
 
-    print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
-    "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
+    print("con los siguientes parámetros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
+    "\n rate = ",valor,"\n la tasa de aciertos serían: \n")
 
     for i in range(len(metodo)):
         print(metodo[i],accuracy[i])
@@ -1614,58 +1614,58 @@ def prueba_Digitos():
     mejor = max(accuracy)
     indice = accuracy.index(mejor)
 
-    print("\nPor lo que el mejor seria el",metodo[indice], "con una accuracy de",rendimiento(misClasificadores[indice],prueba,prueba_clas),"para el conjunto de test")
+    print("\nPor lo que el mejor sería el",metodo[indice], "con una accuracy de",rendimiento(misClasificadores[indice],prueba,prueba_clas),"para el conjunto de test")
 
     return misClasificadores[indice]
 
 
 # In [6]: m = prueba_Digitos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  True
 #  rate =  0.001
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # One vs Rest con Clasificador_RL_ML_Batch: 0.185
 # One vs Rest con Clasificador_RL_ML_St: 0.842
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.826 para el conjunto de test
+# Por lo que el mejor sería el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.826 para el conjunto de test
 
 # In [254]: m = prueba_Digitos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  False
 #  rate =  0.01
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # One vs Rest con Clasificador_RL_ML_Batch: 0.804
 # One vs Rest con Clasificador_RL_ML_St: 0.856
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.811 para el conjunto de test
+# Por lo que el mejor sería el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.811 para el conjunto de test
 
 # m = prueba_Digitos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  50
 #  rate_decay =  True
 #  rate =  0.01
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # One vs Rest con Clasificador_RL_ML_Batch: 0.175
 # One vs Rest con Clasificador_RL_ML_St: 0.857
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.817 para el conjunto de test
+# Por lo que el mejor sería el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.817 para el conjunto de test
 
 # m = prueba_Digitos()
-# con los siguietes parametros:
+# con los siguientes parámetros:
 #  n_epoch =  100
 #  rate_decay =  False
 #  rate =  0.001
-#  la tasa de aciertos serian:
+#  la tasa de aciertos serían:
 
 # One vs Rest con Clasificador_RL_ML_Batch: 0.783
 # One vs Rest con Clasificador_RL_ML_St: 0.854
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.81 para el conjunto de test
+# Por lo que el mejor sería el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.81 para el conjunto de test
 
 def probarPesosDigitos(pesosPorClases):
     clases = clasesFichero
@@ -1726,9 +1726,9 @@ def mejorClasificadorWine():
     entr = wine_entr
     clas_entr = wine_clas_entr
     clases = list(set(clas_entr))
-    n_epochs = 100
+    n_epochs = 1000
     rate = 0.01
-    rate_decay = False
+    rate_decay = True
     clasificadores = []
     rendimientos = []
 
@@ -1763,11 +1763,10 @@ def mejorClasificadorWine():
     return clasificadores[rendimientos.index(max(rendimientos))]
 
 ## m es el peso del mejor clasificador
-## probarPesos(list(set(wine_clas_entr)),m.pesosPorClases)
+## probarPesos(list(set(wine_clas_entr)),pesosWine)
 ## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
 def probarPesosWine(clases,pesosPorClases):
     def clasifica(ej):
-        print("??¿???")
         x = []
         ej = [1]+ej
         for j in range(len(pesosPorClases)):
@@ -1779,49 +1778,61 @@ def probarPesosWine(clases,pesosPorClases):
 # # In [60]: m = mejorClasificadorWine()
 # # Rendimiento del OvR: 0.8888888888888888
 # pesos del anterior rendimiento
-# [[-4.464693575485346,
-#   -43.57991041638832,
-#   -9.391572151683524,
-#   -6.74739397811181,
-#   -132.7910589564548,
-#   -221.73389800636392,
-#   0.04594572086797535,
-#   10.846333937742518,
-#   -1.9918609345517928,
-#   1.0998147943667742,
-#   -15.70881245320547,
-#   -3.5378746279158166,
-#   1.912407028820642,
-#   32.616275132120016],
-#  [3.128022276706968,
-#   27.851287684572082,
-#   -22.89983158183535,
-#   4.565980602913298,
-#   70.06623491027516,
-#   192.52817131856722,
-#   14.14586297780636,
-#   20.464163304184247,
-#   0.5715583511768094,
-#   11.242848701007016,
-#   -62.70951289493242,
-#   11.26196734895127,
-#   24.908400839789365,
-#   -29.301253942773165],
-#  [2.1951112829464345,
-#   24.291241917654194,
-#   40.369633906833315,
-#   6.969099310051722,
-#   85.29402998379574,
-#   94.988009663006,
-#   -17.006795253596046,
-#   -37.569321997235576,
-#   2.454951090244822,
-#   -10.939178520538995,
-#   96.59921837480277,
-#   -10.113767433264647,
-#   -27.213090050164293,
-#   -6.3197935697498515]]
+# pesosWine = [[-4.464693575485346,-43.57991041638832,-9.391572151683524,-6.74739397811181,-132.7910589564548,
+#   -221.73389800636392,0.04594572086797535,10.846333937742518,-1.9918609345517928,1.0998147943667742,
+#   -15.70881245320547,-3.5378746279158166,1.912407028820642,32.616275132120016],[3.128022276706968,27.851287684572082,
+#   -22.89983158183535,4.565980602913298,70.06623491027516,192.52817131856722,14.14586297780636,20.464163304184247,
+#   0.5715583511768094,11.242848701007016,-62.70951289493242,11.26196734895127,24.908400839789365,-29.301253942773165],
+#   [2.1951112829464345,24.291241917654194,40.369633906833315,6.969099310051722,85.29402998379574,94.988009663006,
+#   -17.006795253596046,-37.569321997235576,2.454951090244822,-10.939178520538995,96.59921837480277,-10.113767433264647,
+#   -27.213090050164293,-6.3197935697498515]]
 
+#####
+# In [361]: m = mejorClasificadorWine()
+# Rendimiento del OvR-MLBatch: 0.4444444444444444
+# Rendimiento del OvR-MLSt: 0.75
+# Rendimiento del OvR-L2Batch: 0.3888888888888889
+# Rendimiento del OvR-L2St: 0.3333333333333333
+# Los parámetros han sido: rate_decay = false, rate = 0.01, n_epochs = 100
+
+# pesosWine = [[-46.21189960904281,-520.9376823667673,-139.82676186140355,-96.0958913408886,-1282.7283086268296,
+#   -3333.315275951497,-18.035790559038784,64.93111104497567,-28.0397289534357,-23.669044002877538,-228.5000029404919,
+#   -25.388493300231747,-20.363728527780566,461.25775537233693],[39.52859822570123,388.5482098619103,-49.83509279700508,
+#   60.74224474980208,780.1795045996014,2661.5066689780306,101.90286781518795,108.48740423487955,12.645556787730339,
+#   88.75912383594648,-193.68903329209454,72.7766204467529,152.73739051797068,-448.4505328402602],[4.259430612321957,
+#   90.68482337029403,189.56247549695314,22.93158404754266,347.82922430702916,-38.31854847540123,-85.66701020818904,
+#   -184.36913881697473,17.433924090166663,-60.52163427839051,432.5069896917864,-46.23713127296177,-133.24360630397945,
+#   -11.685907857088505]]
+
+#####
+# In [373]: m = mejorClasificadorWine()
+# Rendimiento del OvR-MLBatch: 0.6111111111111112
+# Rendimiento del OvR-MLSt: 0.9166666666666666
+# Rendimiento del OvR-L2Batch: 0.3333333333333333
+# Rendimiento del OvR-L2St: 0.3333333333333333
+# Los parámetros han sido: rate_decay = true, rate = 0.01, n_epochs = 1000
+# pesosWine = [[-1539.6268835905153,-10878.381086723624,-989.2950720224273,-760.0110038910298,-48346.32644873383,-7031.809963187124,
+#   3571.681620237228,10871.466433506512,-1382.4466908548477,2309.434292377999,-7676.168796703483,-369.54284669054283,
+#   5543.816376934862,2460.425484291416],[1769.0591838047142,4451.162212811217,-21938.07476834826,-1554.2546593901843,
+#   15387.092732307709,4612.235314311085,7705.593762961092,12263.291546577817,205.53732821068223,7957.824551889497,
+#   -46869.15393524881,7078.462408725737,14949.148959781058,-851.3068409341405],[-606.298278122936,-1616.2030264856808,
+#   22467.557514125507,417.7465293565563,13802.568399244361,-1526.056848793015,-13776.715308886163,-27933.480447756963,
+#   1505.6433944532637,-10709.707624891118,49780.66338018994,-7274.637754433477,-22453.48861234773,-369.60125134803275]]
+
+# In [378]: m = mejorClasificadorWine()
+# Rendimiento del OvR-MLBatch: 0.7222222222222222
+# Rendimiento del OvR-MLSt: 0.9722222222222222
+# Rendimiento del OvR-L2Batch: 0.3333333333333333
+# Rendimiento del OvR-L2St: 0.3333333333333333
+# Los parámetros han sido: rate_decay = true, rate = 0.01, n_epochs = 1000. Son los mismos que anteriormente
+# pesosWine = [[-1535.2639350590302,-10868.250274174901,-1222.7734481383357,-733.1930643355506,-48252.542764197045,
+#   -6741.642244430254,3619.7269347639794,10930.496538006555,-1379.337911346591,2365.2822714304716,-7644.938535234778,
+#   -336.82669040413816,5581.573640054291,2091.5676962926564],[1753.1592243831176,4373.217242562065,-22542.966318853178,
+#   -1585.0195771533167,14964.13279245178,4182.722967564622,7770.489781066902,12430.42737369197,189.28693788116306,
+#   7920.805910127139,-46799.28063238624,7145.552027809979,15076.48291507059,-1091.5915738894428],[-647.6327709623212,
+#   -2030.9921344297213,22593.131366482503,372.8855896712479,13413.789503659069,-1415.3829982506606,-13764.420790167671,
+#   -27856.146219021073,1470.9192244280307,-10708.672306596942,49195.41363331626,-7266.7608695149565,-22422.12926570915,
+#   -544.1988897842957]]
 #----------------------------------------------
 
 #----------------------------------------------
@@ -1858,6 +1869,3 @@ def probarPesosWine(clases,pesosPorClases):
 # Por dar una referencia, se pueden obtener clasificadores para el problema de
 # los votos con un rendimiento sobre el test mayor al 90%, y para los dígitos
 # un rendimiento superior al 80%.
-
-# with open('digitdata/traininglabels','r') as fichero:
-#     v = [int(l) for l in fichero]
