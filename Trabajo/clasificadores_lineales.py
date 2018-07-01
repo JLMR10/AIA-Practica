@@ -4,7 +4,7 @@
 # Curso 2017-18
 # Trabajo práctico
 # ===========================================================
-import random, copy, numpy, math
+import random, copy, numpy, math, shelve
 # --------------------------------------------------------------------------
 # Autor del trabajo:
 #
@@ -793,6 +793,7 @@ class Clasificador_RL_OvR():
 
     def entrena(self,entr,clas_entr,n_epochs,rate=0.1,rate_decay=False):
         for i in range(len(self.clasesC)):
+            print(i)
             clasesAux = [self.clasesC[0:i]+self.clasesC[i+1:],self.clasesC[i:i+1]]
             clasificador = self.class_clasifC([0,1])
             clas_entrAux = convertidorMulticlase(clasesAux,clas_entr)
@@ -806,7 +807,8 @@ class Clasificador_RL_OvR():
         else:
             x = []
             for j in range(len(self.clasificadores)):
-                x.append(self.clasificadores[j].clasifica_prob(ej))
+                o = Clasificador_RL_ML_St.clasifica_prob(self.clasificadores[j],ej)
+                x.append(o)
             return self.clasesC[x.index(max(x))]
 
 
@@ -916,7 +918,7 @@ from iris import *
 # Out[36]: 0.9666666666666667
 # ---------------------------------------------------------
 def rendimiento(clasificador,entr,clas_entr):
-    return sum(clasificador.clasifica(x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
+    return sum(Clasificador_RL_OvR.clasifica(clasificador,x) == y for x,y in zip(entr,clas_entr))/len(clas_entr)
 
 ###=================================================================================================
 ##TESTS
@@ -1266,23 +1268,23 @@ def mejorClasificadorVotos():
 
     ## Perceptron
     Perceptron = Clasificador_Perceptron(clases)
-    a = Perceptron.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay= decay, rate=valor)
+    Perceptron.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay= decay, rate=valor)
     acPerceptron = rendimiento(Perceptron,validacion,clases_validacion)
     metodo.append("Perceptron:")
     acuracy.append(acPerceptron)
     misMetodos.append(Perceptron)
 
     ##Clasificador_RL_L2_Batch
-    L2_Bach = Clasificador_RL_ML_St(clases)
-    a,e = L2_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    L2_Bach = Clasificador_RL_L2_Batch(clases)
+    L2_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acL2_bach = rendimiento(L2_Bach,validacion,clases_validacion)
     metodo.append("Clasificador_RL_L2_Batch:")
     acuracy.append(acL2_bach)
     misMetodos.append(L2_Bach)
 
-    ##Clasificador_RL_L2_Batch
+    ##Clasificador_RL_L2_St
     L2_St = Clasificador_RL_L2_St(clases)
-    a,e = L2_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    L2_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acL2_St = rendimiento(L2_St,validacion,clases_validacion)
     metodo.append("Clasificador_RL_L2_St:")
     acuracy.append(acL2_St)
@@ -1290,7 +1292,7 @@ def mejorClasificadorVotos():
 
     ##Clasificador_RL_ML_Batch
     ML_Bach = Clasificador_RL_ML_Batch(clases)
-    a,e = ML_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    ML_Bach.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acML_Bach = rendimiento(ML_Bach,validacion,clases_validacion)
     metodo.append("Clasificador_RL_ML_Batch:")
     acuracy.append(acML_Bach)
@@ -1298,13 +1300,13 @@ def mejorClasificadorVotos():
 
     ##Clasificador_RL_ML_St
     ML_St = Clasificador_RL_ML_St(clases)
-    a,e = ML_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
+    ML_St.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acML_St = rendimiento(ML_St,validacion,clases_validacion)
     metodo.append("Clasificador_RL_ML_St:")
     acuracy.append(acML_St)
     misMetodos.append(ML_St)
 
-    ##one vs rest L2_Bach
+    ##One vs Rest L2_Batch
     one_restL2 = Clasificador_RL_OvR(Clasificador_RL_L2_Batch,clases)
     one_restL2.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay=decay,rate=valor)
     acOneRestL2 = rendimiento(one_restL2,validacion,clases_validacion)
@@ -1603,54 +1605,51 @@ clasesFichero = clasesParaFichero()
 def prueba_Digitos():
 
     epoch = 100
-    decay=True
-    valor=0.001
+    decay = False
+    valor = 0.001
+
+    entr = entrenaFichero
+    entr_clas = clasesEntrenaFichero
+
+    val = validaFichero
+    val_clas = clasesValidaFichero
+
+    prueba = testFichero
+    prueba_clas = clasesTestFichero
 
     misClasificadores = []
     metodo = []
-    acuracy = []
+    accuracy = []
 
     ##one vs rest ML_BATCH
-    one_restL2 = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
-    one_restL2.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
-    acOneRestL2 = rendimiento(one_restL2,entrenaFichero,clasesEntrenaFichero)
+    one_restMLB = Clasificador_RL_OvR(Clasificador_RL_ML_Batch,clasesFichero)
+    one_restMLB.entrena(entr,entr_clas,epoch,rate_decay=decay,rate=valor)
+    acOneRestMLB = rendimiento(one_restMLB,val,val_clas)
     metodo.append("One vs Rest con Clasificador_RL_ML_Batch:")
-    acuracy.append(acOneRestL2)
-    misClasificadores.append(one_restL2)
+    accuracy.append(acOneRestMLB)
+    misClasificadores.append(one_restMLB)
 
     ##one vs rest ML_ST
     one_restMLST = Clasificador_RL_OvR(Clasificador_RL_ML_St,clasesFichero)
-    one_restMLST.entrena(entrenaFichero,clasesEntrenaFichero,epoch,rate_decay=decay,rate=valor)
-    acOneRestMLST = rendimiento(one_restMLST,entrenaFichero,clasesEntrenaFichero)
+    one_restMLST.entrena(entr,entr_clas,epoch,rate_decay=decay,rate=valor)
+    acOneRestMLST = rendimiento(one_restMLST,val,val_clas)
     metodo.append("One vs Rest con Clasificador_RL_ML_St:")
-    acuracy.append(acOneRestMLST)
+    accuracy.append(acOneRestMLST)
     misClasificadores.append(one_restMLST)
 
     print("con los siguietes parametros:\n n_epoch = ",epoch,"\n rate_decay = ",decay,
     "\n rate = ",valor,"\n la tasa de aciertos serian: \n")
 
     for i in range(len(metodo)):
-        print(metodo[i],acuracy[i])
+        print(metodo[i],accuracy[i])
 
-    mejor = max(acuracy)
-    indice = acuracy.index(mejor)
+    mejor = max(accuracy)
+    indice = accuracy.index(mejor)
 
-    print("\nPor lo que el mejor seria el",metodo[indice], "con una acuracy de",acuracy[indice])
+    print("\nPor lo que el mejor seria el",metodo[indice], "con una accuracy de",rendimiento(misClasificadores[indice],prueba,prueba_clas),"para el conjunto de test")
 
     return misClasificadores[indice]
 
-# In [2]: prueba_Digitos()
-# con los siguietes parametros:
-#  n_epoch =  100
-#  rate_decay =  False
-#  rate =  0.01
-#  la tasa de aciertos serian:
-
-# One vs Rest con Clasificador_RL_ML_Batch: 0.983
-# One vs Rest con Clasificador_RL_ML_St: 0.9848
-
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_L2_Batch: con una acuracy de 0.9848
-# Out[2]: <__main__.Clasificador_RL_OvR at 0x1ef10c92518>
 
 # In [6]: m = prueba_Digitos()
 # con los siguietes parametros:
@@ -1659,10 +1658,72 @@ def prueba_Digitos():
 #  rate =  0.001
 #  la tasa de aciertos serian:
 
-# One vs Rest con Clasificador_RL_ML_Batch: 0.9658
-# One vs Rest con Clasificador_RL_ML_St: 0.966
+# One vs Rest con Clasificador_RL_ML_Batch: 0.185
+# One vs Rest con Clasificador_RL_ML_St: 0.842
 
-# Por lo que el mejor seria el One vs Rest con Clasificador_RL_L2_Batch: con una acuracy de 0.966
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.811 para el conjunto de test
+
+# In [254]: m = prueba_Digitos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.01
+#  la tasa de aciertos serian:
+
+# One vs Rest con Clasificador_RL_ML_Batch: 0.804
+# One vs Rest con Clasificador_RL_ML_St: 0.856
+
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.835 para el conjunto de test
+
+# m = prueba_Digitos()
+# con los siguietes parametros:
+#  n_epoch =  50
+#  rate_decay =  True
+#  rate =  0.01
+#  la tasa de aciertos serian:
+
+# One vs Rest con Clasificador_RL_ML_Batch: 0.175
+# One vs Rest con Clasificador_RL_ML_St: 0.857
+
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.817 para el conjunto de test
+
+# m = prueba_Digitos()
+# con los siguietes parametros:
+#  n_epoch =  100
+#  rate_decay =  False
+#  rate =  0.001
+#  la tasa de aciertos serian:
+
+# One vs Rest con Clasificador_RL_ML_Batch: 0.783
+# One vs Rest con Clasificador_RL_ML_St: 0.854
+
+# Por lo que el mejor seria el One vs Rest con Clasificador_RL_ML_St: con una accuracy de 0.81 para el conjunto de test
+
+def probarPesosDigitos(pesosPorClases):
+    clases = clasesFichero
+    def clasifica(ej,y):
+        x = []
+        ej = [1]+ej
+        for j in range(len(clases)):
+            x.append(clasifica_prob(ej,j))
+        return clases[x.index(max(x))]
+
+    def clasifica_prob(ej,j):
+        x = sum(pesosPorClases[j][i]*ej[i] for i in range(len(ej)))
+        return f_sigmoide(x)
+
+    return sum(clasifica(x,y) == y for x,y in zip(testFichero,clasesTestFichero))/len(clasesTestFichero)
+
+def guardarPeso(clasificador):
+    with open('pesosDigitos5.py','w') as fichero:
+        fichero.write("pesos5 = {0}".format(clasificador.pesosPorClases))
+    fichero.closed
+
+from pesosDigitos import *
+from pesosDigitos2 import *
+from pesosDigitos3 import *
+from pesosDigitos4 import *
+from pesosDigitos5 import *
 #----------------------------------------------
 
 #----------------------------------------------
@@ -1673,11 +1734,6 @@ def prueba_Digitos():
 #    datos que se use ha de tener sus atríbutos numéricos. Sin embargo,
 #    también es posible transformar atributos no numéricos en numéricos usando
 #    la técnica conocida como "one hot encoding".
-
-def guardarPeso(clasificador):
-    with open('pesosDigitos','w') as fichero:
-        fichero.write("pesos = {0}".format(clasificador.pesosPorClases))
-    fichero.closed
     
 def crearDataSetUCI():
     with open('wine/wine-data.txt','r') as fichero:
@@ -1741,8 +1797,9 @@ def mejorClasificadorWine():
 ## m es el peso del mejor clasificador
 ## probarPesos(list(set(wine_clas_entr)),m.pesosPorClases)
 ## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
-def probarPesos(clases,pesosPorClases):
+def probarPesosWine(clases,pesosPorClases):
     def clasifica(ej):
+        print("??¿???")
         x = []
         ej = [1]+ej
         for j in range(len(pesosPorClases)):
