@@ -47,7 +47,7 @@ import random, copy, numpy, math, shelve
 # En esta primera parte se pide implementar en Python los siguientes
 # clasificadores BINARIOS, todos ellos vistos en el tema 5.
 
-# - Perceptron umbral
+# - perceptrón umbral
 # - Regresión logística minimizando el error cuadrático:
 #      * Versión batch
 #      * Versión estocástica (regla delta)
@@ -109,7 +109,6 @@ def genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 #   ejemplo el 10%). La proporción se da con prop_n_l_s.
 
 # X2,Y2=genera_conjunto_de_datos_n_l_s(4,8,400,0.1)
-
 def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
     X,Y=genera_conjunto_de_datos_l_s(rango,dim,size)
     randomizado = list(range(size))
@@ -351,7 +350,7 @@ def convertidorMulticlase(clases,entr_clas):
 
 ##################################################################################
 
-## Clasificador del Perceptron
+## Clasificador del perceptrón
 
 class Clasificador_Perceptron():
 
@@ -933,8 +932,8 @@ def pruebaSeparableConGraficas():
     X1e,Y1e=X1[:300],Y1[:300]
     X1t,Y1t=X1[300:],Y1[300:]
 
-    #Perceptron
-    print("Perceptron")
+    #perceptrón
+    print("perceptrón")
     clas_pb1=Clasificador_Perceptron([0,1])
     ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
@@ -948,7 +947,6 @@ def pruebaSeparableConGraficas():
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
     ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac2)+1),ac2,marker='o')
     plt.xlabel('Epochs')
@@ -964,7 +962,6 @@ def pruebaSeparableConGraficas():
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
     ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac3)+1),ac3,marker='o')
     plt.xlabel('Epochs')
@@ -980,7 +977,6 @@ def pruebaSeparableConGraficas():
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
     ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac4)+1),ac4,marker='o')
     plt.xlabel('Epochs')
@@ -997,7 +993,6 @@ def pruebaSeparableConGraficas():
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
     ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac5)+1),ac5,marker='o')
     plt.xlabel('Epochs')
@@ -1014,8 +1009,8 @@ def pruebaSeparableSinGraficas():
     X1e,Y1e=X1[:300],Y1[:300]
     X1t,Y1t=X1[300:],Y1[300:]
 
-    #Perceptron
-    print("Perceptron")
+    #perceptrón
+    print("perceptrón")
     clas_pb1=Clasificador_Perceptron([0,1])
     clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
@@ -1025,7 +1020,6 @@ def pruebaSeparableSinGraficas():
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
     clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal St minimizando L2
@@ -1033,7 +1027,6 @@ def pruebaSeparableSinGraficas():
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
     clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal Bach maximizando verosimilitud
@@ -1041,7 +1034,6 @@ def pruebaSeparableSinGraficas():
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
     clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal St maximizando verosimilitud
@@ -1049,7 +1041,6 @@ def pruebaSeparableSinGraficas():
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
     clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
 def pruebaNoSeparableConGraficas():
@@ -1058,8 +1049,8 @@ def pruebaNoSeparableConGraficas():
     X1e,Y1e=X1[:300],Y1[:300]
     X1t,Y1t=X1[300:],Y1[300:]
 
-    #Perceptron
-    print("Perceptron")
+    #perceptrón
+    print("perceptrón")
     clas_pb1=Clasificador_Perceptron([0,1])
     ac = clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
@@ -1073,7 +1064,6 @@ def pruebaNoSeparableConGraficas():
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
     ac2,error2 = clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac2)+1),ac2,marker='o')
     plt.xlabel('Epochs')
@@ -1089,7 +1079,6 @@ def pruebaNoSeparableConGraficas():
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
     ac3,error3=clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac3)+1),ac3,marker='o')
     plt.xlabel('Epochs')
@@ -1105,7 +1094,6 @@ def pruebaNoSeparableConGraficas():
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
     ac4,error4=clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac4)+1),ac4,marker='o')
     plt.xlabel('Epochs')
@@ -1122,7 +1110,6 @@ def pruebaNoSeparableConGraficas():
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
     ac5,error5=clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
     plt.plot(range(1,len(ac5)+1),ac5,marker='o')
     plt.xlabel('Epochs')
@@ -1139,8 +1126,8 @@ def pruebaNoSeparableSinGraficas():
     X1e,Y1e=X1[:300],Y1[:300]
     X1t,Y1t=X1[300:],Y1[300:]
 
-    #Perceptron
-    print("Perceptron")
+    #perceptrón
+    print("perceptrón")
     clas_pb1=Clasificador_Perceptron([0,1])
     clas_pb1.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
     print("Accuracy Perceptrón:",sum(clas_pb1.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
@@ -1150,7 +1137,6 @@ def pruebaNoSeparableSinGraficas():
     print("Clasificador_RL_L2_Batch")
     clas_pb2=Clasificador_RL_L2_Batch([0,1])
     clas_pb2.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_Batch:", clas_pb2.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_Batch:",sum(clas_pb2.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal St minimizando L2
@@ -1158,7 +1144,6 @@ def pruebaNoSeparableSinGraficas():
     print("Clasificador_RL_L2_St")
     clas_pb3=Clasificador_RL_L2_St([0,1])
     clas_pb3.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_L2_St:", clas_pb3.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_L2_St:",sum(clas_pb3.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal Bach maximizando verosimilitud
@@ -1166,7 +1151,6 @@ def pruebaNoSeparableSinGraficas():
     print("Clasificador_RL_ML_Batch")
     clas_pb4=Clasificador_RL_ML_Batch([0,1])
     clas_pb4.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_Batch:", clas_pb4.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_Batch:",sum(clas_pb4.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
     #regresión Lineal St maximizando verosimilitud
@@ -1174,7 +1158,6 @@ def pruebaNoSeparableSinGraficas():
     print("Clasificador_RL_ML_St")
     clas_pb5=Clasificador_RL_ML_St([0,1])
     clas_pb5.entrena(X1e,Y1e,100,rate_decay=True,rate=0.001)
-    print("Clasifica_prob de Clasificador_RL_ML_St:", clas_pb5.clasifica_prob(X1t[0]),Y1t[0])
     print("Accuracy Clasificador_RL_ML_St:",sum(clas_pb5.clasifica(x) == y for x,y in zip(X1t,Y1t))/len(Y1t))
 
 #----------------------------------------------
@@ -1221,7 +1204,6 @@ def prueba_OvR_Iris():
     rendimientos.append(rendimientoL2St)
     print("Rendimiento del OvR-L2St:",rendimientoL2St)
 
-    return clasificadores[rendimientos.index(max(rendimientos))]
 
 #----------------------------------------------
 ###Pruebas SoftMax
@@ -1230,7 +1212,7 @@ def prueba_Softmax_Iris():
     iris_clases=["Iris-setosa","Iris-virginica","Iris-versicolor"]
     clas_rlml1=Clasificador_RL_Softmax(iris_clases)
     clas_rlml1.entrena(iris_entr,iris_entr_clas,100,rate_decay=True,rate=0.01)
-    print(rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
+    print("Rendimiento del Softmax:",rendimiento(clas_rlml1,iris_entr,iris_entr_clas))
 
 #----------------------------------------------
 
@@ -1266,11 +1248,11 @@ def mejorClasificadorVotos():
     metodo = []
     accuracy = []
 
-    ## Perceptron
+    ## perceptrón
     Perceptron = Clasificador_Perceptron(clases)
     Perceptron.entrena(entrenamiento,clases_entrenamiento,epoch,rate_decay= decay, rate=valor)
     acPerceptron = rendimiento(Perceptron,validacion,clases_validacion)
-    metodo.append("Perceptron:")
+    metodo.append("perceptrón:")
     accuracy.append(acPerceptron)
     misMetodos.append(Perceptron)
 
@@ -1337,7 +1319,7 @@ def probarPesosVotos(pesos,nombreClasif):
 #  rate =  0.01
 #  la tasa de aciertos serían:
 
-# Perceptron: 0.9565217391304348
+# perceptrón: 0.9565217391304348
 # Clasificador_RL_L2_Batch: 0.9565217391304348
 # Clasificador_RL_L2_St: 0.9855072463768116
 # Clasificador_RL_ML_Batch: 0.9565217391304348
@@ -1360,7 +1342,7 @@ def probarPesosVotos(pesos,nombreClasif):
 #  rate =  0.01
 #  la tasa de aciertos serían:
 
-# Perceptron: 0.9710144927536232
+# perceptrón: 0.9710144927536232
 # Clasificador_RL_L2_Batch: 1.0
 # Clasificador_RL_L2_St: 0.9710144927536232
 # Clasificador_RL_ML_Batch: 0.9855072463768116
@@ -1384,7 +1366,7 @@ def probarPesosVotos(pesos,nombreClasif):
 #  rate =  0.001
 #  la tasa de aciertos serían:
 
-# Perceptron: 0.927536231884058
+# perceptrón: 0.927536231884058
 # Clasificador_RL_L2_Batch: 0.8260869565217391
 # Clasificador_RL_L2_St: 0.9710144927536232
 # Clasificador_RL_ML_Batch: 0.9420289855072463
@@ -1407,7 +1389,7 @@ def probarPesosVotos(pesos,nombreClasif):
 #  rate =  0.01
 #  la tasa de aciertos serían:
 
-# Perceptron: 0.9420289855072463
+# perceptrón: 0.9420289855072463
 # Clasificador_RL_L2_Batch: 0.9565217391304348
 # Clasificador_RL_L2_St: 0.9710144927536232
 # Clasificador_RL_ML_Batch: 0.9710144927536232
@@ -1438,32 +1420,33 @@ def probarPesosVotos(pesos,nombreClasif):
 #    en el mismo orden. Será necesario, por tanto, definir funciones python que
 #    lean esos ficheros y obtengan los datos en el mismo formato python en el
 #    que los necesitan los algoritmos.
+#############################################################
 
-def leer():
-    with open('digitdata/trainingimages','r') as fichero:
-        total = []
-        v = []
-        i=0
-        for linea in fichero:
-            w = []
-            i+=1
-            for posicion in linea[:-1]:
-                if " " == posicion:
-                    w.append(0)
-                else:
-                    w.append(1)
-            v.append(w)
-            if(i==28):
-                i=0
-                total.append(v)
-                v = []
-        fichero.closed
-    return total
+#############################################################
+#
+# def leer():
+#     with open('digitdata/trainingimages','r') as fichero:
+#         total = []
+#         v = []
+#         i=0
+#         for linea in fichero:
+#             w = []
+#             i+=1
+#             for posicion in linea[:-1]:
+#                 if " " == posicion:
+#                     w.append(0)
+#                 else:
+#                     w.append(1)
+#             v.append(w)
+#             if(i==28):
+#                 i=0
+#                 total.append(v)
+#                 v = []
+#         fichero.closed
+#     return total
 
-
-entrenaFichero = []
-def leerEntrena():
-    with open('digitdata/trainingimages','r') as fichero:
+def leerEjemplos(fichero):
+    with open(fichero,'r') as fichero:
         total = []
         w = []
         i=0
@@ -1480,96 +1463,35 @@ def leerEntrena():
                 w = []
         fichero.closed
     return total
-entrenaFichero = leerEntrena()
 
-clasesEntrenaFichero = []
-def leerClasesEntrena():
+def leerClases(fichero):
     v = []
-    with open('digitdata/traininglabels','r') as fichero:
+    with open(fichero,'r') as fichero:
         for linea in fichero:
             v.append(int(linea[0]))
         fichero.closed
     return v
-clasesEntrenaFichero = leerClasesEntrena()
+
+## Importa lo necesario para la utilización de todo lo referente a clasificar Dígitos
+entrenaFichero = leerEjemplos('digitdata/trainingimages')
+clasesEntrenaFichero = leerClases('digitdata/traininglabels')
+validaFichero = leerEjemplos('digitdata/validationimages')
+clasesValidaFichero = leerClases('digitdata/validationlabels')
+testFichero = leerEjemplos('digitdata/testimages')
+clasesTestFichero = leerClases('digitdata/testlabels')
 
 ####
 
-validaFichero = []
-def leerValida():
-    with open('digitdata/validationimages','r') as fichero:
-        total = []
-        w = []
-        i=0
-        for linea in fichero:
-            i+=1
-            for posicion in linea[:-1]:
-                if " " == posicion:
-                    w.append(0)
-                else:
-                    w.append(1)
-            if(i==28):
-                i=0
-                total.append(w)
-                w = []
-        fichero.closed
-    return total
-validaFichero = leerValida()
-
-clasesValidaFichero = []
-def leerClasesValida():
-    v = []
-    with open('digitdata/validationlabels','r') as fichero:
-        for linea in fichero:
-            v.append(int(linea[0]))
-        fichero.closed
-    return v
-clasesValidaFichero = leerClasesValida()
-
-######
-
-testFichero = []
-def leerTest():
-    with open('digitdata/testimages','r') as fichero:
-        total = []
-        w = []
-        i=0
-        for linea in fichero:
-            i+=1
-            for posicion in linea[:-1]:
-                if " " == posicion:
-                    w.append(0)
-                else:
-                    w.append(1)
-            if(i==28):
-                i=0
-                total.append(w)
-                w = []
-        fichero.closed
-    return total
-testFichero = leerTest()
-
-clasesTestFichero = []
-def leerClasesTest():
-    v = []
-    with open('digitdata/testlabels','r') as fichero:
-        for linea in fichero:
-            v.append(int(linea[0]))
-        fichero.closed
-    return v
-clasesTestFichero = leerClasesTest()
-
-########
-
-clasesFichero = []
 def clasesParaFichero():
     res = []
     for i in clasesEntrenaFichero:
         if not i in res:
             res.append(i)
     return res
+    
 clasesFichero = clasesParaFichero()
 
-######
+########
 
 def prueba_Digitos():
 
@@ -1690,7 +1612,7 @@ def guardarPeso(clasificador):
 
 from pesosDigitos import *
 from pesosDigitos2 import *
-from pesosDigitos3 import *
+from pesosDigitos3 import * ## la prueba de pesos3 no está pero los pesos están guardados y es el que mejor clasifica
 from pesosDigitos4 import *
 from pesosDigitos5 import *
 #----------------------------------------------
@@ -1723,10 +1645,12 @@ def crearDataSetUCI():
 
 from wineData import *
 
+clasesWine = list(set(wine_clas_entr))
+
 def mejorClasificadorWine():
     entr = wine_entr
     clas_entr = wine_clas_entr
-    clases = list(set(clas_entr))
+    clases = clasesWine
     n_epochs = 1000
     rate = 0.01
     rate_decay = True
@@ -1764,8 +1688,9 @@ def mejorClasificadorWine():
     return clasificadores[rendimientos.index(max(rendimientos))]
 
 ## m es el peso del mejor clasificador
-## probarPesos(list(set(wine_clas_entr)),pesosWine)
+## probarPesos(clasesWine,pesosWine)
 ## así comprobamos que efectivamente el resultado que tenemos aquí comentado es real y no inventado
+
 def probarPesosWine(clases,pesosPorClases):
     def clasifica(ej):
         x = []
