@@ -109,6 +109,7 @@ def genera_conjunto_de_datos_l_s(rango,dim,n_datos):
 #   ejemplo el 10%). La proporción se da con prop_n_l_s.
 
 # X2,Y2=genera_conjunto_de_datos_n_l_s(4,8,400,0.1)
+
 def genera_conjunto_de_datos_n_l_s(rango,dim,size,prop_n_l_s=0.1):
     X,Y=genera_conjunto_de_datos_l_s(rango,dim,size)
     randomizado = list(range(size))
